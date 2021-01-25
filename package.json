@@ -1,0 +1,12 @@
+{
+  "name": "school-agenda-system",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Nyakaru/school-agenda-system.git",
+  "author": "nyakaru <nyakaru477@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "prisma-client-lib": "^1.34.10",
+    "prisma1": "^1.34.11"
+  }
+}

@@ -1,0 +1,20 @@
+type User {
+    id: ID! @id
+    username: String!
+    email: String! @unique
+    password: String!
+    isVerified: Boolean! @default(value: false)
+    isLoggedIn: Boolean
+    role: Role! @default(value: ANALYST)
+    createdAt: DateTime! @createdAt
+    updatedAt: DateTime! @updatedAt
+}
+
+enum Role {
+  ADMIN
+  TEACHER
+  PARENT
+  ACCOUNTANT
+  STOREMAN
+  USER
+}

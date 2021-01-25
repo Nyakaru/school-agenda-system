@@ -1,0 +1,17 @@
+
+projects:
+    app:
+        schemaPath: graphql/*
+        includes: ['**/*.graphql']
+        extensions:
+            endpoints:
+                default: http://localhost:4000
+    db:
+        schemaPath: graphql/schema.graphql
+        includes: ['**/*.graphql']
+        extensions:
+            codegen:
+                - generator: graphql-binding
+                  language: javascript
+                  output:
+                      binding: generated/prisma-client/index.js'
