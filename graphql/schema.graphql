@@ -1,0 +1,55 @@
+scalar Date
+
+type User {
+    id: ID!
+    username: String!
+    email: String
+    role: Role!
+    phone: String
+    school: String!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type GeneralResponse {
+    message: String
+    error: Error
+}
+
+type AuthPayload {
+    token: String
+    user: User
+}
+
+type Error {
+    message: String!
+    field: String!
+}
+
+type AuthResponse {
+    payload: AuthPayload
+    error: Error
+}
+
+input SignUpInput {
+    username: String!
+    email: String
+    phone: String
+    school: String!
+    password: String!
+}
+
+input LoginInput {
+    email: String
+    phone: String
+    password: String!
+}
+
+enum Role {
+    ADMIN
+    TEACHER
+    PARENT
+    ACCOUNTANT
+    STOREMAN
+    USER
+}

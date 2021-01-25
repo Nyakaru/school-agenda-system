@@ -1,0 +1,11 @@
+type Mutation {
+    """
+    Handle user signup
+    """
+    signup(input: SignUpInput!): GeneralResponse!
+
+    """
+    Login and authenticate user
+    """
+    login(input: LoginInput!): AuthResponse!
+}
