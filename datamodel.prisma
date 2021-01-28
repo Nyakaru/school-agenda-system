@@ -1,12 +1,13 @@
 type User {
   id: ID! @id
   username: String!
-  email: String! @unique
+  email: String @unique
+  school: String!
+  phone: String @unique
   password: String!
-  isVerified: Boolean! @default(value: false)
   role: Role! @default(value: USER)
-  createdAt: DateTime! @createdAt
-  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
 }
 
 enum Role {

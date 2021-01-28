@@ -1,6 +1,6 @@
 # The HTTP endpoint for your Prisma API
 #endpoint: ''
-endpoint: https://eu1.prisma.sh/kinara-moses-f425e2/hacker/dev
+endpoint: https://eu1.prisma.sh/nyakaru477/school/dev
 
 # Points to the file that contains your datamodel
 datamodel: datamodel.graphql

@@ -64,13 +64,13 @@ type Subscription {
 type User {
   id: ID!
   username: String!
-  email: String!
+  email: String
+  school: String!
+  phone: String
   password: String!
-  isVerified: Boolean!
-  isLoggedIn: Boolean
   role: Role!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type UserConnection {
@@ -82,10 +82,10 @@ type UserConnection {
 input UserCreateInput {
   id: ID
   username: String!
-  email: String!
+  email: String
+  school: String!
+  phone: String
   password: String!
-  isVerified: Boolean
-  isLoggedIn: Boolean
   role: Role
 }
 
@@ -101,12 +101,12 @@ enum UserOrderByInput {
   username_DESC
   email_ASC
   email_DESC
+  school_ASC
+  school_DESC
+  phone_ASC
+  phone_DESC
   password_ASC
   password_DESC
-  isVerified_ASC
-  isVerified_DESC
-  isLoggedIn_ASC
-  isLoggedIn_DESC
   role_ASC
   role_DESC
   createdAt_ASC
@@ -118,13 +118,13 @@ enum UserOrderByInput {
 type UserPreviousValues {
   id: ID!
   username: String!
-  email: String!
+  email: String
+  school: String!
+  phone: String
   password: String!
-  isVerified: Boolean!
-  isLoggedIn: Boolean
   role: Role!
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type UserSubscriptionPayload {
@@ -148,18 +148,18 @@ input UserSubscriptionWhereInput {
 input UserUpdateInput {
   username: String
   email: String
+  school: String
+  phone: String
   password: String
-  isVerified: Boolean
-  isLoggedIn: Boolean
   role: Role
 }
 
 input UserUpdateManyMutationInput {
   username: String
   email: String
+  school: String
+  phone: String
   password: String
-  isVerified: Boolean
-  isLoggedIn: Boolean
   role: Role
 }
 
@@ -206,6 +206,34 @@ input UserWhereInput {
   email_not_starts_with: String
   email_ends_with: String
   email_not_ends_with: String
+  school: String
+  school_not: String
+  school_in: [String!]
+  school_not_in: [String!]
+  school_lt: String
+  school_lte: String
+  school_gt: String
+  school_gte: String
+  school_contains: String
+  school_not_contains: String
+  school_starts_with: String
+  school_not_starts_with: String
+  school_ends_with: String
+  school_not_ends_with: String
+  phone: String
+  phone_not: String
+  phone_in: [String!]
+  phone_not_in: [String!]
+  phone_lt: String
+  phone_lte: String
+  phone_gt: String
+  phone_gte: String
+  phone_contains: String
+  phone_not_contains: String
+  phone_starts_with: String
+  phone_not_starts_with: String
+  phone_ends_with: String
+  phone_not_ends_with: String
   password: String
   password_not: String
   password_in: [String!]
@@ -220,10 +248,6 @@ input UserWhereInput {
   password_not_starts_with: String
   password_ends_with: String
   password_not_ends_with: String
-  isVerified: Boolean
-  isVerified_not: Boolean
-  isLoggedIn: Boolean
-  isLoggedIn_not: Boolean
   role: Role
   role_not: Role
   role_in: [Role!]
@@ -252,6 +276,7 @@ input UserWhereInput {
 input UserWhereUniqueInput {
   id: ID
   email: String
+  phone: String
 }
 `
       }

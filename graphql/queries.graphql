@@ -1,0 +1,6 @@
+type Query {
+  """
+  Retrieve all users
+  """
+  users: [User]
+}
