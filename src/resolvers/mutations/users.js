@@ -3,7 +3,7 @@ import { hash, compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 
 import { configs } from '../../configs';
-import { acceptableUserPayload, checkUserPayload } from '../../utils/validators';
+import { utils } from '../../utils/';
 
 const createToken = user => {
     return sign(
@@ -35,7 +35,7 @@ const generalError = () => {
  */
 const signup = async (_, { input }, context, _info) => {
     if (input['email'] || input['phone']) {
-        const error = await checkUserPayload(acceptableUserPayload, input);
+        const error = await utils.checkUserPayload(utils.acceptableUserPayload, input);
         if (error) {
             const { path: field, message } = error;
 
@@ -75,7 +75,30 @@ const signup = async (_, { input }, context, _info) => {
             };
         }
 
-        //Implement a way of sending an email or sms or both to the user created
+        if (user['email']) {
+            const message = utils.compileEjs({ template: 'general-template' })({
+                header: 'Access Granted',
+                name: input['username'],
+                body: `<br> Welcome to the School Agenda System where we help you manage eveything school.
+                Your account was succesfully created. <br>
+                Please click on the link below and use the following credentials to log in 
+                <br>
+                Email: ${user['email']}
+                <br>
+                Password: ${input['password']}
+                <br><br>
+                If you have other questions regarding the system, don't 
+                hesitate to send us a mail @support.schoolagendasystem.com.
+                <br><br>
+                Best Regards`,
+                ctaText: 'School Agenda System',
+                ctaLink: `http://localhost:4000/graphql`,
+            });
+            utils.sendEmail({ html: message, subject: 'Notification from School Agenda System', to: user['email'] });
+        } else {
+            //Implement a way of sending an sms to the user created
+        }
+
         return {
             message: 'Account successfully created. User should check their email or phone',
         };
