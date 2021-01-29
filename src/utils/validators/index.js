@@ -8,7 +8,7 @@ export const acceptableUserPayload = yup.object().shape({
     email: yup.string().trim().email('Invalid email format'),
     school: yup.string().trim().required('School name is required'),
     role: yup.string().trim(),
-    phone: yup.string().trim().min(10, 'Phone number have 10 numbers').max(10, 'Phone number have 10 numbers'),
+    phone: yup.string().trim().min(13, 'Phone number have 13 numbers').max(13, 'Phone number have 13 numbers'),
     password: yup
         .string()
         .trim()
