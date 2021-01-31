@@ -1,6 +1,8 @@
 //@ts-check
-import UserMutations from './users'
+import UserMutations from './users';
+import SchoolMutations from './school';
 
 export default {
-    ...UserMutations
-}
+    ...UserMutations,
+    ...SchoolMutations,
+};

@@ -1,9 +1,12 @@
-import { acceptableUserPayload, checkUserPayload } from './validators';
+import Validators from './validators';
 import { sendEmail, compileEjs } from './mail';
+import { sendMessage } from './smsModule';
+import { sendErrorResponse } from './response';
 
 export const utils = {
-    acceptableUserPayload,
-    checkUserPayload,
+    ...Validators,
     sendEmail,
     compileEjs,
+    sendMessage,
+    sendErrorResponse,
 };

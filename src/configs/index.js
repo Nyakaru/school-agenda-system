@@ -6,4 +6,6 @@ export const configs = {
     smtpPort: process.env.SMTP_PORT,
     smtpEmail: process.env.SMTP_EMAIL,
     smtpPass: process.env.SMTP_PASS,
+    apiKey: process.env.SMS_API,
+    smsUsername: process.env.SMS_API_USERNAME,
 };

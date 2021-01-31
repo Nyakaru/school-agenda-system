@@ -35,7 +35,7 @@ const generalError = () => {
  */
 const signup = async (_, { input }, context, _info) => {
     if (input['email'] || input['phone']) {
-        const error = await utils.checkUserPayload(utils.acceptableUserPayload, input);
+        const error = await utils.checkPayload(utils.acceptableUserPayload, input);
         if (error) {
             const { path: field, message } = error;
 
@@ -94,9 +94,13 @@ const signup = async (_, { input }, context, _info) => {
                 ctaText: 'School Agenda System',
                 ctaLink: `http://localhost:4000/graphql`,
             });
-            utils.sendEmail({ html: message, subject: 'Notification from School Agenda System', to: user['email'] });
-        } else {
-            //Implement a way of sending an sms to the user created
+            utils.sendEmail({ html: message, subject: 'Notification from School Agenda System', to: user['email'], cc: [] });
+        }
+
+        if (user['phone']) {
+            const message =
+                'Welcome to the School Agenda System where we help you manage eveything school. Your account was succesfully created. Please click on the link below to sign in automatically.';
+            utils.sendMessage([user['phone']], message);
         }
 
         return {

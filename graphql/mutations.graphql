@@ -8,4 +8,9 @@ type Mutation {
     Login and authenticate user
     """
     login(input: LoginInput!): AuthResponse!
+
+    """
+    Create school
+    """
+    school(input: SchoolCreateInput!): SchoolResponse!
 }
