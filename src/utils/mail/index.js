@@ -38,7 +38,7 @@ const transporter = createTransport(opts);
  * @returns
  */
 export const sendEmail = options => {
-    const { to, cc = [], subject, html, attachments } = options;
+    const { to, cc, subject, html, attachments } = options;
 
     return new Promise((resolve, reject) => {
         transporter.sendMail(
