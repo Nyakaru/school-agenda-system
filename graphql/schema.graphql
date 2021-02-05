@@ -1,5 +1,14 @@
 scalar Date
 
+type School {
+    id: ID!
+    name: String!
+    email: String
+    address: String
+    createdAt: Date
+    updatedAt: Date
+}
+
 type User {
     id: ID!
     username: String!
@@ -7,6 +16,107 @@ type User {
     role: Role!
     phone: String
     school: String!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Classroom {
+    id: ID!
+    name: String!
+    level: Integer!
+    school: School!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Student {
+    id: ID!
+    name: String
+    admNo: String
+    domitory: String
+    level: Integer!
+    feeBalance: Float!
+    school: School!
+    classroom: Classroom!
+    user: User!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Register {
+    id: ID!
+    level: String
+    type: String
+    admNo: String
+    status: String!
+    school: School!
+    user: User!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Timetable {
+    id: ID!
+    level: String
+    schedule: DateTime
+    level: Integer
+    school: School!
+    user: User!
+    subject: Subject!
+    classroom: Classroom!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Fee {
+    id: ID!
+    tuition: Float
+    accomodation: Float
+    other: Float
+    totalAmount: Float
+    student: Student!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Payment {
+    id: ID!
+    amountPaid: Float
+    school: School!
+    student: Student!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Subject {
+    id: ID!
+    name: String
+    user: User!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type Exam {
+    id: ID!
+    name: String
+    english: String
+    mathematics: String
+    kiswahili: String
+    chemistry: String
+    physics: String
+    biology: String
+    grade: String
+    school: School!
+    student: Student!
+    createdAt: Date
+    updatedAt: Date
+}
+
+type SchoolEvent {
+    id: ID!
+    name: String
+    school: School!
+    user: User!
     createdAt: Date
     updatedAt: Date
 }

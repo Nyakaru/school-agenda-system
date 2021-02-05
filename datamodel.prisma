@@ -1,3 +1,21 @@
+enum Role {
+  ADMIN
+  TEACHER
+  PARENT
+  ACCOUNTANT
+  STOREMAN
+  USER
+}
+
+type School {
+  id: ID! @id
+  name: String @unique
+  email: String @unique
+  address: String
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
 type User {
   id: ID! @id
   username: String!
@@ -6,15 +24,108 @@ type User {
   phone: String @unique
   password: String!
   role: Role! @default(value: USER)
+  school: School! @relation(link: INLINE)
   createdAt: DateTime @createdAt
   updatedAt: DateTime @updatedAt
 }
 
-enum Role {
-  ADMIN
-  TEACHER
-  PARENT
-  ACCOUNTANT
-  STOREMAN
-  USER
+type Classroom {
+  id: ID! @id
+  name: String @unique
+  level: Integer!
+  school: School! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type Student {
+  id: ID! @id
+  name: String @unique
+  admNo: String @unique
+  domitory: String
+  level: Integer!
+  feeBalance: Float!
+  school: School! @relation(link: INLINE)
+  classroom: Classroom! @relation(link: INLINE)
+  user: User! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type Register {
+  id: ID! @id
+  level: String
+  type: String
+  admNo: String
+  status: String!
+  school: School! @relation(link: INLINE)
+  user: User! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type Timetable {
+  id: ID! @id
+  level: String
+  schedule: DateTime
+  level: Integer
+  school: School! @relation(link: INLINE)
+  user: User! @relation(link: INLINE)
+  subject: Subject! @relation(link: INLINE)
+  classroom: Classroom! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type Subject {
+  id: ID! @id
+  name: String @unique
+  user: User! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type Fee {
+  id: ID! @id
+  tuition: Float
+  accomodation: Float
+  other: Float
+  totalAmount: Float
+  student: Student! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type Payment {
+  id: ID! @id
+  amountPaid: Float
+  school: School! @relation(link: INLINE)
+  student: Student! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type Exam {
+  id: ID! @id
+  name: String
+  english: String
+  mathematics: String
+  kiswahili: String
+  chemistry: String
+  physics: String
+  biology: String
+  grade: String
+  school: School! @relation(link: INLINE)
+  student: Student! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
+}
+
+type SchoolEvent {
+  id: ID! @id
+  name: String
+  school: School! @relation(link: INLINE)
+  user: User! @relation(link: INLINE)
+  createdAt: DateTime @createdAt
+  updatedAt: DateTime @updatedAt
 }
