@@ -35,7 +35,7 @@ const generalError = () => {
  */
 const signup = async (_, { input }, context, _info) => {
     if (input['email'] || input['phone']) {
-        const error = await utils.checkUserPayload(utils.acceptableUserPayload, input);
+        const error = await utils.checkPayload(utils.acceptableUserPayload, input);
         if (error) {
             const { path: field, message } = error;
 

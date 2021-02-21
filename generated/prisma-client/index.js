@@ -9,7 +9,23 @@ var models = [
     embedded: false
   },
   {
+    name: "School",
+    embedded: false
+  },
+  {
+    name: "Country",
+    embedded: false
+  },
+  {
+    name: "Region",
+    embedded: false
+  },
+  {
     name: "Role",
+    embedded: false
+  },
+  {
+    name: "Level",
     embedded: false
   }
 ];

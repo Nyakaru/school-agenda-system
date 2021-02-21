@@ -2,12 +2,41 @@ type User {
   id: ID! @id
   username: String!
   email: String @unique
-  school: String!
+  school: School @relation(link: INLINE)
   phone: String @unique
   password: String!
   role: Role! @default(value: USER)
   createdAt: DateTime @createdAt
   updatedAt: DateTime @updatedAt
+}
+
+type School {
+    id: ID! @id
+    name: String!
+    region: Region @relation(link: INLINE)
+    address: String
+    email: String
+    phone: Int! @unique
+    schoolCode: String! @unique
+    imageUrl: String
+    level: Level! @default(value: GENERAL)
+    createdAt: DateTime @createdAt
+    updatedAt: DateTime @updatedAt
+}
+
+type Country {
+    id: ID! @id
+    name: String!
+    createdAt: DateTime @createdAt
+    updatedAt: DateTime @updatedAt
+}
+
+type Region {
+    id: ID! @id
+    name: String!
+    country: Country @relation(link: INLINE)
+    createdAt: DateTime @createdAt
+    updatedAt: DateTime @updatedAt
 }
 
 enum Role {
@@ -17,4 +46,11 @@ enum Role {
   ACCOUNTANT
   STOREMAN
   USER
+}
+
+enum Level {
+    PRESCHOOL
+    PRIMARY
+    HIGHSCHOOL
+    GENERAL
 }

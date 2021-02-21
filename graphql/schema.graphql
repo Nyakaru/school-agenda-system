@@ -7,12 +7,38 @@ type User {
     role: Role!
     phone: String
     school: String!
-    createdAt: Date
-    updatedAt: Date
+}
+
+type School {
+    id: ID!
+    name: String!
+    region: Region!
+    address: String
+    email: String
+    phone: Int!
+    schoolCode: String!
+    imageUrl: String
+    level: Level!
+}
+
+type Country {
+    id: ID!
+    name: String!
+}
+
+type Region {
+    id: ID!
+    name: String!
+    country: Country
 }
 
 type GeneralResponse {
     message: String
+    error: Error
+}
+
+type SchoolResponse {
+    payload: School
     error: Error
 }
 
@@ -45,6 +71,25 @@ input LoginInput {
     password: String!
 }
 
+input SchoolCreateInput {
+    name: String!
+    region: RegionCreateOneInput!
+    address: String
+    email: String
+    phone: Int!
+    schoolCode: String!
+    imageUrl: String
+    level: Level
+}
+
+input RegionCreateOneInput {
+    connect: RegionWhereUniqueInput
+}
+
+input RegionWhereUniqueInput {
+    id: ID
+}
+
 enum Role {
     ADMIN
     TEACHER
@@ -52,4 +97,11 @@ enum Role {
     ACCOUNTANT
     STOREMAN
     USER
+}
+
+enum Level {
+    PRESCHOOL
+    PRIMARY
+    HIGHSCHOOL
+    GENERAL
 }
