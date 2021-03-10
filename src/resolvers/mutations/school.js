@@ -1,5 +1,6 @@
 //@ts-check
 import { utils } from '../../utils';
+
 /**
  * @param {any} _
  * @param {any} input
@@ -39,7 +40,7 @@ const school = async (_, { input }, context, _info) => {
             return utils.sendErrorResponse(field, message);
         }
 
-        const school = await context.prisma.createSchool(input);
+        const school = await context.prisma.createSchool(input).$fragment(utils.schoolFragment);
         return {
             payload: school,
         };

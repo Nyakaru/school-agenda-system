@@ -16,7 +16,7 @@ type School {
     region: Region @relation(link: INLINE)
     address: String
     email: String
-    phone: Int! @unique
+    phone: String! @unique
     schoolCode: String! @unique
     imageUrl: String
     level: Level! @default(value: GENERAL)
