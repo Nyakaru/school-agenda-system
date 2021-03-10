@@ -6,7 +6,7 @@ export const acceptableSchoolPayload = yup.object().shape({
     region: yup.object().required('Region is required'),
     address: yup.string().trim(),
     level: yup.string().trim(),
-    phone: yup.number().required('Phone number is required'),
+    phone: yup.string().trim().min(13, 'Phone number have 13 numbers').max(13, 'Phone number have 13 numbers').required('Phone number is required'),
     schoolCode: yup.string().trim().required('School code is required'),
     imageUrl: yup.string().trim(),
 });

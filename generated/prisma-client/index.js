@@ -32,6 +32,6 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://eu1.prisma.sh/nyakaru477/school/dev`
+  endpoint: `https://us1.prisma.sh/nyakaru477/school-agenda-system/dev`
 });
 exports.prisma = new exports.Prisma();

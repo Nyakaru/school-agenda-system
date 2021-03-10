@@ -6,7 +6,7 @@ type User {
     email: String
     role: Role!
     phone: String
-    school: String!
+    school: School!
 }
 
 type School {
@@ -15,7 +15,7 @@ type School {
     region: Region!
     address: String
     email: String
-    phone: Int!
+    phone: String!
     schoolCode: String!
     imageUrl: String
     level: Level!
@@ -61,7 +61,7 @@ input SignUpInput {
     username: String!
     email: String
     phone: String
-    school: String!
+    school: SchoolCreateOneInput!
     password: String!
 }
 
@@ -76,7 +76,7 @@ input SchoolCreateInput {
     region: RegionCreateOneInput!
     address: String
     email: String
-    phone: Int!
+    phone: String!
     schoolCode: String!
     imageUrl: String
     level: Level
@@ -86,8 +86,16 @@ input RegionCreateOneInput {
     connect: RegionWhereUniqueInput
 }
 
+input SchoolCreateOneInput {
+    connect: SchoolWhereUniqueInput
+}
+
 input RegionWhereUniqueInput {
     id: ID
+}
+
+input SchoolWhereUniqueInput {
+    schoolCode: String
 }
 
 enum Role {

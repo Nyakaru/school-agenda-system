@@ -2,19 +2,19 @@
 import { utils } from '../../utils';
 
 /**
- * Retrieve all users
+ * Retrieve all schools
  *
  * @param {import('../../..').IRequestContext} context
  * @returns
  */
-const users = async (_, _args, context, _info) => {
+const schools = async (_, _args, context, _info) => {
     try {
-        return await context.prisma.users().$fragment(utils.userFragment);
+        return await context.prisma.schools().$fragment(utils.schoolFragment);
     } catch (error) {
         console.log(error);
     }
 };
 
 export default {
-    users,
+    schools,
 };

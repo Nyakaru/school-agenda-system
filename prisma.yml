@@ -1,11 +1,12 @@
 # The HTTP endpoint for your Prisma API
 #endpoint: ''
-endpoint: https://eu1.prisma.sh/nyakaru477/school/dev
+#endpoint: http://localhost:4466
+endpoint: https://us1.prisma.sh/nyakaru477/school-agenda-system/dev
 
 # Points to the file that contains your datamodel
 datamodel: datamodel.graphql
 
 # Specifies language & location for the generated Prisma client
 generate:
-  - generator: javascript-client
-    output: generated/prisma-client
+    - generator: javascript-client
+      output: generated/prisma-client

@@ -9,7 +9,7 @@ const createToken = user => {
     return sign(
         {
             username: user['username'],
-            school: user['school'],
+            school: user['school']['schoolCode'],
             email: user['email'],
             phone: user['phone'],
             role: user['role'],
@@ -50,7 +50,7 @@ const signup = async (_, { input }, context, _info) => {
         }
 
         if (input['phone']) {
-            const user2 = await context.prisma.user({ email: input['email'] });
+            const user2 = await context.prisma.user({ phone: input['phone'] });
             existingUser = user2;
         }
 
@@ -61,6 +61,14 @@ const signup = async (_, { input }, context, _info) => {
                     message: 'User with that email or phone already exists',
                 },
             };
+        }
+
+        const school = input['school']['connect']['schoolCode'];
+        let message = 'School with that name does not exist';
+        let field = 'School';
+        const schoolExists = await context.prisma.school({ schoolCode: school });
+        if (!schoolExists) {
+            return utils.sendErrorResponse(field, message);
         }
 
         const password = await hash(input['password'], 10);
@@ -126,13 +134,13 @@ const login = async (_, { input }, context, _info) => {
     let user = {};
 
     if (input['email']) {
-        const user1 = await context.prisma.user({ email: input['email'] });
+        const user1 = await context.prisma.user({ email: input['email'] }).$fragment(utils.userFragment);
         if (!user1) {
             return generalError();
         }
         user = user1;
     } else if (input['phone']) {
-        const user2 = await context.prisma.user({ phone: input['phone'] });
+        const user2 = await context.prisma.user({ phone: input['phone'] }).$fragment(utils.userFragment);
         if (!user2) {
             return generalError();
         }

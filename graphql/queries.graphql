@@ -1,6 +1,11 @@
 type Query {
-  """
-  Retrieve all users
-  """
-  users: [User]
+    """
+    Retrieve all users
+    """
+    users: [User]
+
+    """
+    Retrieve all schools
+    """
+    schools: [School]
 }
