@@ -15,6 +15,23 @@ const users = async (_, _args, context, _info) => {
     }
 };
 
+/**
+ * Retrieve all users associated with currently logged in admin
+ *
+ * @param {import('../../..').IRequestContext} context
+ * @returns
+ */
+const schoolUsers = async (_, _args, context, _info) => {
+    try {
+        const users = await context.prisma.users().$fragment(utils.userFragment);
+        const schoolUsers = users.filter(item => item.school.schoolCode === context.user.school);
+        return schoolUsers;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export default {
     users,
+    schoolUsers,
 };

@@ -5,6 +5,11 @@ type Query {
     users: [User]
 
     """
+    Retrieve all users associated with an admin
+    """
+    schoolUsers: [User]
+
+    """
     Retrieve all schools
     """
     schools: [School]
