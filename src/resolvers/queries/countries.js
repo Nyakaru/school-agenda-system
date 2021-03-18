@@ -15,6 +15,21 @@ const countries = async (_, _args, context, _info) => {
     }
 };
 
+/**
+ * Retrieve all regions in a country
+ *
+ * @param {import('../../..').IRequestContext} context
+ * @returns
+ */
+const regions = async (_, { input }, context, _info) => {
+    try {
+        return await context.prisma.regions({ where: { country: { id: input['id'] } } });
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export default {
     countries,
+    regions,
 };

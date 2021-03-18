@@ -61,6 +61,7 @@ input SignUpInput {
     username: String!
     email: String
     phone: String
+    role: Role
     school: SchoolCreateOneInput!
     password: String!
 }
@@ -71,6 +72,9 @@ input LoginInput {
     password: String!
 }
 
+input RegionQueryInput {
+    id: String!
+}
 input SchoolCreateInput {
     name: String!
     region: RegionCreateOneInput!

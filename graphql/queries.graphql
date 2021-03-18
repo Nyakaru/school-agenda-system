@@ -18,4 +18,9 @@ type Query {
     Retrieve all countries
     """
     countries: [Country]
+
+    """
+    Retrieve all regions in a country
+    """
+    regions(input: RegionQueryInput): [Region]
 }
