@@ -102,13 +102,15 @@ const signup = async (_, { input }, context, _info) => {
                 ctaText: 'School Agenda System',
                 ctaLink: `http://localhost:4000/graphql`,
             });
-            utils.sendEmail({ html: message, subject: 'Notification from School Agenda System', to: user['email'], cc: [] });
+            //This will be uncommented in future
+            // utils.sendEmail({ html: message, subject: 'Notification from School Agenda System', to: user['email'], cc: [] });
         }
 
         if (user['phone']) {
             const message =
                 'Welcome to the School Agenda System where we help you manage eveything school. Your account was succesfully created. Please click on the link below to sign in automatically.';
-            utils.sendMessage([user['phone']], message);
+            //ditto
+            // utils.sendMessage([user['phone']], message);
         }
 
         return {

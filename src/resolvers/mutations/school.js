@@ -34,7 +34,7 @@ const school = async (_, { input }, context, _info) => {
 
         const schoolId = input['region']['connect']['id'];
         message = 'Region with that name does not exist';
-        field = 'Region';
+        field = 'region';
         const regionExists = await context.prisma.region({ id: schoolId });
         if (!regionExists) {
             return utils.sendErrorResponse(field, message);
