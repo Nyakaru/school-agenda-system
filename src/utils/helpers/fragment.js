@@ -47,7 +47,15 @@ const userFragment = /* GraphQL */ `
     }
 `;
 
+const countryFragment = /* GraphQL */ `
+    fragment CountryWithDetails on Country {
+        id
+        name
+    }
+`;
+
 export default {
     schoolFragment,
     userFragment,
+    countryFragment,
 };
