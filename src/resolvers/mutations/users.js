@@ -170,7 +170,25 @@ const login = async (_, { input }, context, _info) => {
     return { payload: { token, user } };
 };
 
+/**
+ * @param {any} _
+ * @param {any} input
+ * @param {import('../../..').IRequestContext} context
+ * @param {any} _info
+ */
+const updateUser = async (_, input, context, _info) => {
+    try {
+        const user = await context.prisma.updateUser({ where: input['where'], data: input['data'] });
+        return {
+            payload: { user },
+        };
+    } catch (error) {
+        utils.sendErrorResponse('General', error.message);
+    }
+};
+
 export default {
     signup,
     login,
+    updateUser,
 };

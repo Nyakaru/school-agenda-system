@@ -49,6 +49,24 @@ const school = async (_, { input }, context, _info) => {
     }
 };
 
+/**
+ * @param {any} _
+ * @param {any} input
+ * @param {import('../../..').IRequestContext} context
+ * @param {any} _info
+ */
+const updateSchool = async (_, input, context, _info) => {
+    try {
+        const school = await context.prisma.updateSchool({ where: input['where'], data: input['data'] }).$fragment(utils.schoolFragment);
+        return {
+            payload: school,
+        };
+    } catch (error) {
+        utils.sendErrorResponse('General', error.message);
+    }
+};
+
 export default {
     school,
+    updateSchool,
 };

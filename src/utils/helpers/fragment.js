@@ -3,6 +3,7 @@ const schoolFragment = /* GraphQL */ `
     fragment SchoolWithDetails on School {
         schoolCode
         address
+        phone
         region {
             name
             id
@@ -47,15 +48,19 @@ const userFragment = /* GraphQL */ `
     }
 `;
 
-const countryFragment = /* GraphQL */ `
-    fragment CountryWithDetails on Country {
-        id
+const regionFragment = /* GraphQL */ `
+    fragment RegionWithDetails on Region {
         name
+        id
+        country {
+            name
+            id
+        }
     }
 `;
 
 export default {
     schoolFragment,
     userFragment,
-    countryFragment,
+    regionFragment,
 };
