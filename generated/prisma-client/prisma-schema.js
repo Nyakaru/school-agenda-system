@@ -388,6 +388,7 @@ input RegionWhereUniqueInput {
 }
 
 enum Role {
+  SUDO
   ADMIN
   TEACHER
   PARENT

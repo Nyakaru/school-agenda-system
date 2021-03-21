@@ -263,6 +263,7 @@ export type SchoolOrderByInput =
   | "updatedAt_DESC";
 
 export type Role =
+  | "SUDO"
   | "ADMIN"
   | "TEACHER"
   | "PARENT"

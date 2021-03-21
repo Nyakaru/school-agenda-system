@@ -1,6 +1,4 @@
 //@ts-check
-import { utils } from '../../utils';
-
 /**
  * Retrieve all countries
  *
@@ -9,7 +7,7 @@ import { utils } from '../../utils';
  */
 const countries = async (_, _args, context, _info) => {
     try {
-        return await context.prisma.countries().$fragment(utils.countryFragment);
+        return await context.prisma.countries();
     } catch (error) {
         console.log(error);
     }

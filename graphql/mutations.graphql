@@ -13,4 +13,33 @@ type Mutation {
     Create school
     """
     school(input: SchoolCreateInput!): SchoolResponse!
+
+    """
+    Update a school
+    """
+    updateSchool(data: SchoolUpdateInput!, where: SchoolWhereUniqueInput): SchoolResponse
+
+    """
+    Update a user
+    """
+    updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput): AuthResponse
+
+    """
+    Create a country
+    """
+    createCountry(input: CountryCreateInput!): Country!
+
+    """
+    Update a country
+    """
+    updateCountry(data: CountryUpdateInput!, where: CountryWhereUniqueInput!): Country
+
+    """
+    Create a Region
+    """
+    createRegion(input: RegionCreateInput!): Region!
+    """
+    Update a region
+    """
+    updateRegion(data: RegionUpdateInput!, where: RegionWhereUniqueInput!): Region
 }

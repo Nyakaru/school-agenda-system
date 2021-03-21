@@ -98,11 +98,73 @@ input RegionWhereUniqueInput {
     id: ID
 }
 
+input RegionUpdateOneInput {
+    connect: RegionWhereUniqueInput
+}
+
 input SchoolWhereUniqueInput {
     schoolCode: String
 }
 
+input SchoolUpdateInput {
+    name: String
+    region: RegionUpdateOneInput
+    address: String
+    email: String
+    phone: String
+    schoolCode: String
+    imageUrl: String
+    level: Level
+}
+
+input SchoolUpdateOneInput {
+    connect: SchoolWhereUniqueInput
+}
+
+input UserWhereUniqueInput {
+    id: ID
+}
+
+input UserUpdateInput {
+    username: String
+    email: String
+    school: SchoolUpdateOneInput
+    phone: String
+    password: String
+    role: Role
+}
+
+input CountryCreateInput {
+    name: String!
+}
+
+input CountryUpdateInput {
+    name: String
+}
+
+input CountryWhereUniqueInput {
+    id: ID
+}
+
+input RegionCreateInput {
+    name: String!
+    country: CountryCreateOneInput!
+}
+
+input CountryCreateOneInput {
+    connect: CountryWhereUniqueInput
+}
+
+input RegionUpdateInput {
+    name: String
+    country: CountryUpdateOneInput
+}
+
+input CountryUpdateOneInput {
+    connect: CountryWhereUniqueInput
+}
 enum Role {
+    SUDO
     ADMIN
     TEACHER
     PARENT
