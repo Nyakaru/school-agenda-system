@@ -7,7 +7,7 @@ import { schema } from './schema';
 import { configs } from './configs';
 
 const app = express();
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 
 const server = new ApolloServer({
     schema,
