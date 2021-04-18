@@ -21,6 +21,18 @@ var models = [
     embedded: false
   },
   {
+    name: "Classroom",
+    embedded: false
+  },
+  {
+    name: "Student",
+    embedded: false
+  },
+  {
+    name: "Subject",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },
