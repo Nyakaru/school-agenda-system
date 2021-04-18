@@ -19,6 +19,7 @@ type School {
     schoolCode: String!
     imageUrl: String
     level: Level!
+    students: [Student]
 }
 
 type Country {
@@ -30,6 +31,33 @@ type Region {
     id: ID!
     name: String!
     country: Country
+}
+
+type Classroom {
+    id: ID!
+    name: String!
+    level: String!
+    school: School!
+    students: [Student]
+    subjects: [Subject]
+}
+
+type Student {
+    id: ID!
+    name: String!
+    admNo: String!
+    domitory: String
+    class: Classroom
+    feeBalance: String
+    subjects: [Subject]
+    school: School!
+}
+
+type Subject {
+    id: ID!
+    name: String!
+    assignee: User
+    class: Classroom!
 }
 
 type GeneralResponse {

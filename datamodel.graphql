@@ -20,6 +20,7 @@ type School {
     schoolCode: String! @unique
     imageUrl: String
     level: Level! @default(value: GENERAL)
+    students: [Student]
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
 }
@@ -35,6 +36,39 @@ type Region {
     id: ID! @id
     name: String!
     country: Country @relation(link: INLINE)
+    createdAt: DateTime @createdAt
+    updatedAt: DateTime @updatedAt
+}
+
+type Classroom {
+    id: ID! @id
+    name: String!
+    level: String!
+    school: School! @relation(link: INLINE)
+    students: [Student]
+    subjects: [Subject]
+    createdAt: DateTime @createdAt
+    updatedAt: DateTime @updatedAt
+}
+
+type Student {
+    id: ID! @id
+    name: String!
+    admNo: String!
+    domitory: String
+    class: Classroom @relation(link: INLINE)
+    feeBalance: String
+    subjects: [Subject]
+    school: School!
+    createdAt: DateTime @createdAt
+    updatedAt: DateTime @updatedAt
+}
+
+type Subject {
+    id: ID! @id
+    name: String!
+    assignee: User @relation(link: INLINE)
+    class: Classroom! @relation(link: INLINE)
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
 }

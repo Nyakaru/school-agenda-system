@@ -3,7 +3,11 @@ module.exports = {
   // Please don't change this file manually but run `prisma generate` to update it.
   // For more information, please read the docs: https://www.prisma.io/docs/prisma-client/
 
-/* GraphQL */ `type AggregateCountry {
+/* GraphQL */ `type AggregateClassroom {
+  count: Int!
+}
+
+type AggregateCountry {
   count: Int!
 }
 
@@ -15,12 +19,244 @@ type AggregateSchool {
   count: Int!
 }
 
+type AggregateStudent {
+  count: Int!
+}
+
+type AggregateSubject {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
 
 type BatchPayload {
   count: Long!
+}
+
+type Classroom {
+  id: ID!
+  name: String!
+  level: String!
+  school: School!
+  students(where: StudentWhereInput, orderBy: StudentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Student!]
+  subjects(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subject!]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ClassroomConnection {
+  pageInfo: PageInfo!
+  edges: [ClassroomEdge]!
+  aggregate: AggregateClassroom!
+}
+
+input ClassroomCreateInput {
+  id: ID
+  name: String!
+  level: String!
+  school: SchoolCreateOneInput!
+  students: StudentCreateManyWithoutClassInput
+  subjects: SubjectCreateManyWithoutClassInput
+}
+
+input ClassroomCreateOneWithoutStudentsInput {
+  create: ClassroomCreateWithoutStudentsInput
+  connect: ClassroomWhereUniqueInput
+}
+
+input ClassroomCreateOneWithoutSubjectsInput {
+  create: ClassroomCreateWithoutSubjectsInput
+  connect: ClassroomWhereUniqueInput
+}
+
+input ClassroomCreateWithoutStudentsInput {
+  id: ID
+  name: String!
+  level: String!
+  school: SchoolCreateOneInput!
+  subjects: SubjectCreateManyWithoutClassInput
+}
+
+input ClassroomCreateWithoutSubjectsInput {
+  id: ID
+  name: String!
+  level: String!
+  school: SchoolCreateOneInput!
+  students: StudentCreateManyWithoutClassInput
+}
+
+type ClassroomEdge {
+  node: Classroom!
+  cursor: String!
+}
+
+enum ClassroomOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  level_ASC
+  level_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ClassroomPreviousValues {
+  id: ID!
+  name: String!
+  level: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type ClassroomSubscriptionPayload {
+  mutation: MutationType!
+  node: Classroom
+  updatedFields: [String!]
+  previousValues: ClassroomPreviousValues
+}
+
+input ClassroomSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ClassroomWhereInput
+  AND: [ClassroomSubscriptionWhereInput!]
+  OR: [ClassroomSubscriptionWhereInput!]
+  NOT: [ClassroomSubscriptionWhereInput!]
+}
+
+input ClassroomUpdateInput {
+  name: String
+  level: String
+  school: SchoolUpdateOneRequiredInput
+  students: StudentUpdateManyWithoutClassInput
+  subjects: SubjectUpdateManyWithoutClassInput
+}
+
+input ClassroomUpdateManyMutationInput {
+  name: String
+  level: String
+}
+
+input ClassroomUpdateOneRequiredWithoutSubjectsInput {
+  create: ClassroomCreateWithoutSubjectsInput
+  update: ClassroomUpdateWithoutSubjectsDataInput
+  upsert: ClassroomUpsertWithoutSubjectsInput
+  connect: ClassroomWhereUniqueInput
+}
+
+input ClassroomUpdateOneWithoutStudentsInput {
+  create: ClassroomCreateWithoutStudentsInput
+  update: ClassroomUpdateWithoutStudentsDataInput
+  upsert: ClassroomUpsertWithoutStudentsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ClassroomWhereUniqueInput
+}
+
+input ClassroomUpdateWithoutStudentsDataInput {
+  name: String
+  level: String
+  school: SchoolUpdateOneRequiredInput
+  subjects: SubjectUpdateManyWithoutClassInput
+}
+
+input ClassroomUpdateWithoutSubjectsDataInput {
+  name: String
+  level: String
+  school: SchoolUpdateOneRequiredInput
+  students: StudentUpdateManyWithoutClassInput
+}
+
+input ClassroomUpsertWithoutStudentsInput {
+  update: ClassroomUpdateWithoutStudentsDataInput!
+  create: ClassroomCreateWithoutStudentsInput!
+}
+
+input ClassroomUpsertWithoutSubjectsInput {
+  update: ClassroomUpdateWithoutSubjectsDataInput!
+  create: ClassroomCreateWithoutSubjectsInput!
+}
+
+input ClassroomWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  level: String
+  level_not: String
+  level_in: [String!]
+  level_not_in: [String!]
+  level_lt: String
+  level_lte: String
+  level_gt: String
+  level_gte: String
+  level_contains: String
+  level_not_contains: String
+  level_starts_with: String
+  level_not_starts_with: String
+  level_ends_with: String
+  level_not_ends_with: String
+  school: SchoolWhereInput
+  students_every: StudentWhereInput
+  students_some: StudentWhereInput
+  students_none: StudentWhereInput
+  subjects_every: SubjectWhereInput
+  subjects_some: SubjectWhereInput
+  subjects_none: SubjectWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [ClassroomWhereInput!]
+  OR: [ClassroomWhereInput!]
+  NOT: [ClassroomWhereInput!]
+}
+
+input ClassroomWhereUniqueInput {
+  id: ID
 }
 
 type Country {
@@ -179,6 +415,12 @@ enum Level {
 scalar Long
 
 type Mutation {
+  createClassroom(data: ClassroomCreateInput!): Classroom!
+  updateClassroom(data: ClassroomUpdateInput!, where: ClassroomWhereUniqueInput!): Classroom
+  updateManyClassrooms(data: ClassroomUpdateManyMutationInput!, where: ClassroomWhereInput): BatchPayload!
+  upsertClassroom(where: ClassroomWhereUniqueInput!, create: ClassroomCreateInput!, update: ClassroomUpdateInput!): Classroom!
+  deleteClassroom(where: ClassroomWhereUniqueInput!): Classroom
+  deleteManyClassrooms(where: ClassroomWhereInput): BatchPayload!
   createCountry(data: CountryCreateInput!): Country!
   updateCountry(data: CountryUpdateInput!, where: CountryWhereUniqueInput!): Country
   updateManyCountries(data: CountryUpdateManyMutationInput!, where: CountryWhereInput): BatchPayload!
@@ -197,6 +439,18 @@ type Mutation {
   upsertSchool(where: SchoolWhereUniqueInput!, create: SchoolCreateInput!, update: SchoolUpdateInput!): School!
   deleteSchool(where: SchoolWhereUniqueInput!): School
   deleteManySchools(where: SchoolWhereInput): BatchPayload!
+  createStudent(data: StudentCreateInput!): Student!
+  updateStudent(data: StudentUpdateInput!, where: StudentWhereUniqueInput!): Student
+  updateManyStudents(data: StudentUpdateManyMutationInput!, where: StudentWhereInput): BatchPayload!
+  upsertStudent(where: StudentWhereUniqueInput!, create: StudentCreateInput!, update: StudentUpdateInput!): Student!
+  deleteStudent(where: StudentWhereUniqueInput!): Student
+  deleteManyStudents(where: StudentWhereInput): BatchPayload!
+  createSubject(data: SubjectCreateInput!): Subject!
+  updateSubject(data: SubjectUpdateInput!, where: SubjectWhereUniqueInput!): Subject
+  updateManySubjects(data: SubjectUpdateManyMutationInput!, where: SubjectWhereInput): BatchPayload!
+  upsertSubject(where: SubjectWhereUniqueInput!, create: SubjectCreateInput!, update: SubjectUpdateInput!): Subject!
+  deleteSubject(where: SubjectWhereUniqueInput!): Subject
+  deleteManySubjects(where: SubjectWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -223,6 +477,9 @@ type PageInfo {
 }
 
 type Query {
+  classroom(where: ClassroomWhereUniqueInput!): Classroom
+  classrooms(where: ClassroomWhereInput, orderBy: ClassroomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Classroom]!
+  classroomsConnection(where: ClassroomWhereInput, orderBy: ClassroomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ClassroomConnection!
   country(where: CountryWhereUniqueInput!): Country
   countries(where: CountryWhereInput, orderBy: CountryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Country]!
   countriesConnection(where: CountryWhereInput, orderBy: CountryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CountryConnection!
@@ -232,6 +489,12 @@ type Query {
   school(where: SchoolWhereUniqueInput!): School
   schools(where: SchoolWhereInput, orderBy: SchoolOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [School]!
   schoolsConnection(where: SchoolWhereInput, orderBy: SchoolOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SchoolConnection!
+  student(where: StudentWhereUniqueInput!): Student
+  students(where: StudentWhereInput, orderBy: StudentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Student]!
+  studentsConnection(where: StudentWhereInput, orderBy: StudentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): StudentConnection!
+  subject(where: SubjectWhereUniqueInput!): Subject
+  subjects(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subject]!
+  subjectsConnection(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SubjectConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -407,6 +670,7 @@ type School {
   schoolCode: String!
   imageUrl: String
   level: Level!
+  students(where: StudentWhereInput, orderBy: StudentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Student!]
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -427,11 +691,29 @@ input SchoolCreateInput {
   schoolCode: String!
   imageUrl: String
   level: Level
+  students: StudentCreateManyWithoutSchoolInput
 }
 
 input SchoolCreateOneInput {
   create: SchoolCreateInput
   connect: SchoolWhereUniqueInput
+}
+
+input SchoolCreateOneWithoutStudentsInput {
+  create: SchoolCreateWithoutStudentsInput
+  connect: SchoolWhereUniqueInput
+}
+
+input SchoolCreateWithoutStudentsInput {
+  id: ID
+  name: String!
+  region: RegionCreateOneInput
+  address: String
+  email: String
+  phone: String!
+  schoolCode: String!
+  imageUrl: String
+  level: Level
 }
 
 type SchoolEdge {
@@ -502,6 +784,7 @@ input SchoolUpdateDataInput {
   schoolCode: String
   imageUrl: String
   level: Level
+  students: StudentUpdateManyWithoutSchoolInput
 }
 
 input SchoolUpdateInput {
@@ -513,6 +796,7 @@ input SchoolUpdateInput {
   schoolCode: String
   imageUrl: String
   level: Level
+  students: StudentUpdateManyWithoutSchoolInput
 }
 
 input SchoolUpdateManyMutationInput {
@@ -534,9 +818,39 @@ input SchoolUpdateOneInput {
   connect: SchoolWhereUniqueInput
 }
 
+input SchoolUpdateOneRequiredInput {
+  create: SchoolCreateInput
+  update: SchoolUpdateDataInput
+  upsert: SchoolUpsertNestedInput
+  connect: SchoolWhereUniqueInput
+}
+
+input SchoolUpdateOneRequiredWithoutStudentsInput {
+  create: SchoolCreateWithoutStudentsInput
+  update: SchoolUpdateWithoutStudentsDataInput
+  upsert: SchoolUpsertWithoutStudentsInput
+  connect: SchoolWhereUniqueInput
+}
+
+input SchoolUpdateWithoutStudentsDataInput {
+  name: String
+  region: RegionUpdateOneInput
+  address: String
+  email: String
+  phone: String
+  schoolCode: String
+  imageUrl: String
+  level: Level
+}
+
 input SchoolUpsertNestedInput {
   update: SchoolUpdateDataInput!
   create: SchoolCreateInput!
+}
+
+input SchoolUpsertWithoutStudentsInput {
+  update: SchoolUpdateWithoutStudentsDataInput!
+  create: SchoolCreateWithoutStudentsInput!
 }
 
 input SchoolWhereInput {
@@ -643,6 +957,9 @@ input SchoolWhereInput {
   level_not: Level
   level_in: [Level!]
   level_not_in: [Level!]
+  students_every: StudentWhereInput
+  students_some: StudentWhereInput
+  students_none: StudentWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -670,10 +987,670 @@ input SchoolWhereUniqueInput {
   schoolCode: String
 }
 
+type Student {
+  id: ID!
+  name: String!
+  admNo: String!
+  domitory: String
+  class: Classroom
+  feeBalance: String
+  subjects(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subject!]
+  school: School!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type StudentConnection {
+  pageInfo: PageInfo!
+  edges: [StudentEdge]!
+  aggregate: AggregateStudent!
+}
+
+input StudentCreateInput {
+  id: ID
+  name: String!
+  admNo: String!
+  domitory: String
+  class: ClassroomCreateOneWithoutStudentsInput
+  feeBalance: String
+  subjects: SubjectCreateManyInput
+  school: SchoolCreateOneWithoutStudentsInput!
+}
+
+input StudentCreateManyWithoutClassInput {
+  create: [StudentCreateWithoutClassInput!]
+  connect: [StudentWhereUniqueInput!]
+}
+
+input StudentCreateManyWithoutSchoolInput {
+  create: [StudentCreateWithoutSchoolInput!]
+  connect: [StudentWhereUniqueInput!]
+}
+
+input StudentCreateWithoutClassInput {
+  id: ID
+  name: String!
+  admNo: String!
+  domitory: String
+  feeBalance: String
+  subjects: SubjectCreateManyInput
+  school: SchoolCreateOneWithoutStudentsInput!
+}
+
+input StudentCreateWithoutSchoolInput {
+  id: ID
+  name: String!
+  admNo: String!
+  domitory: String
+  class: ClassroomCreateOneWithoutStudentsInput
+  feeBalance: String
+  subjects: SubjectCreateManyInput
+}
+
+type StudentEdge {
+  node: Student!
+  cursor: String!
+}
+
+enum StudentOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  admNo_ASC
+  admNo_DESC
+  domitory_ASC
+  domitory_DESC
+  feeBalance_ASC
+  feeBalance_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type StudentPreviousValues {
+  id: ID!
+  name: String!
+  admNo: String!
+  domitory: String
+  feeBalance: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input StudentScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  admNo: String
+  admNo_not: String
+  admNo_in: [String!]
+  admNo_not_in: [String!]
+  admNo_lt: String
+  admNo_lte: String
+  admNo_gt: String
+  admNo_gte: String
+  admNo_contains: String
+  admNo_not_contains: String
+  admNo_starts_with: String
+  admNo_not_starts_with: String
+  admNo_ends_with: String
+  admNo_not_ends_with: String
+  domitory: String
+  domitory_not: String
+  domitory_in: [String!]
+  domitory_not_in: [String!]
+  domitory_lt: String
+  domitory_lte: String
+  domitory_gt: String
+  domitory_gte: String
+  domitory_contains: String
+  domitory_not_contains: String
+  domitory_starts_with: String
+  domitory_not_starts_with: String
+  domitory_ends_with: String
+  domitory_not_ends_with: String
+  feeBalance: String
+  feeBalance_not: String
+  feeBalance_in: [String!]
+  feeBalance_not_in: [String!]
+  feeBalance_lt: String
+  feeBalance_lte: String
+  feeBalance_gt: String
+  feeBalance_gte: String
+  feeBalance_contains: String
+  feeBalance_not_contains: String
+  feeBalance_starts_with: String
+  feeBalance_not_starts_with: String
+  feeBalance_ends_with: String
+  feeBalance_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [StudentScalarWhereInput!]
+  OR: [StudentScalarWhereInput!]
+  NOT: [StudentScalarWhereInput!]
+}
+
+type StudentSubscriptionPayload {
+  mutation: MutationType!
+  node: Student
+  updatedFields: [String!]
+  previousValues: StudentPreviousValues
+}
+
+input StudentSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: StudentWhereInput
+  AND: [StudentSubscriptionWhereInput!]
+  OR: [StudentSubscriptionWhereInput!]
+  NOT: [StudentSubscriptionWhereInput!]
+}
+
+input StudentUpdateInput {
+  name: String
+  admNo: String
+  domitory: String
+  class: ClassroomUpdateOneWithoutStudentsInput
+  feeBalance: String
+  subjects: SubjectUpdateManyInput
+  school: SchoolUpdateOneRequiredWithoutStudentsInput
+}
+
+input StudentUpdateManyDataInput {
+  name: String
+  admNo: String
+  domitory: String
+  feeBalance: String
+}
+
+input StudentUpdateManyMutationInput {
+  name: String
+  admNo: String
+  domitory: String
+  feeBalance: String
+}
+
+input StudentUpdateManyWithoutClassInput {
+  create: [StudentCreateWithoutClassInput!]
+  delete: [StudentWhereUniqueInput!]
+  connect: [StudentWhereUniqueInput!]
+  set: [StudentWhereUniqueInput!]
+  disconnect: [StudentWhereUniqueInput!]
+  update: [StudentUpdateWithWhereUniqueWithoutClassInput!]
+  upsert: [StudentUpsertWithWhereUniqueWithoutClassInput!]
+  deleteMany: [StudentScalarWhereInput!]
+  updateMany: [StudentUpdateManyWithWhereNestedInput!]
+}
+
+input StudentUpdateManyWithoutSchoolInput {
+  create: [StudentCreateWithoutSchoolInput!]
+  delete: [StudentWhereUniqueInput!]
+  connect: [StudentWhereUniqueInput!]
+  set: [StudentWhereUniqueInput!]
+  disconnect: [StudentWhereUniqueInput!]
+  update: [StudentUpdateWithWhereUniqueWithoutSchoolInput!]
+  upsert: [StudentUpsertWithWhereUniqueWithoutSchoolInput!]
+  deleteMany: [StudentScalarWhereInput!]
+  updateMany: [StudentUpdateManyWithWhereNestedInput!]
+}
+
+input StudentUpdateManyWithWhereNestedInput {
+  where: StudentScalarWhereInput!
+  data: StudentUpdateManyDataInput!
+}
+
+input StudentUpdateWithoutClassDataInput {
+  name: String
+  admNo: String
+  domitory: String
+  feeBalance: String
+  subjects: SubjectUpdateManyInput
+  school: SchoolUpdateOneRequiredWithoutStudentsInput
+}
+
+input StudentUpdateWithoutSchoolDataInput {
+  name: String
+  admNo: String
+  domitory: String
+  class: ClassroomUpdateOneWithoutStudentsInput
+  feeBalance: String
+  subjects: SubjectUpdateManyInput
+}
+
+input StudentUpdateWithWhereUniqueWithoutClassInput {
+  where: StudentWhereUniqueInput!
+  data: StudentUpdateWithoutClassDataInput!
+}
+
+input StudentUpdateWithWhereUniqueWithoutSchoolInput {
+  where: StudentWhereUniqueInput!
+  data: StudentUpdateWithoutSchoolDataInput!
+}
+
+input StudentUpsertWithWhereUniqueWithoutClassInput {
+  where: StudentWhereUniqueInput!
+  update: StudentUpdateWithoutClassDataInput!
+  create: StudentCreateWithoutClassInput!
+}
+
+input StudentUpsertWithWhereUniqueWithoutSchoolInput {
+  where: StudentWhereUniqueInput!
+  update: StudentUpdateWithoutSchoolDataInput!
+  create: StudentCreateWithoutSchoolInput!
+}
+
+input StudentWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  admNo: String
+  admNo_not: String
+  admNo_in: [String!]
+  admNo_not_in: [String!]
+  admNo_lt: String
+  admNo_lte: String
+  admNo_gt: String
+  admNo_gte: String
+  admNo_contains: String
+  admNo_not_contains: String
+  admNo_starts_with: String
+  admNo_not_starts_with: String
+  admNo_ends_with: String
+  admNo_not_ends_with: String
+  domitory: String
+  domitory_not: String
+  domitory_in: [String!]
+  domitory_not_in: [String!]
+  domitory_lt: String
+  domitory_lte: String
+  domitory_gt: String
+  domitory_gte: String
+  domitory_contains: String
+  domitory_not_contains: String
+  domitory_starts_with: String
+  domitory_not_starts_with: String
+  domitory_ends_with: String
+  domitory_not_ends_with: String
+  class: ClassroomWhereInput
+  feeBalance: String
+  feeBalance_not: String
+  feeBalance_in: [String!]
+  feeBalance_not_in: [String!]
+  feeBalance_lt: String
+  feeBalance_lte: String
+  feeBalance_gt: String
+  feeBalance_gte: String
+  feeBalance_contains: String
+  feeBalance_not_contains: String
+  feeBalance_starts_with: String
+  feeBalance_not_starts_with: String
+  feeBalance_ends_with: String
+  feeBalance_not_ends_with: String
+  subjects_every: SubjectWhereInput
+  subjects_some: SubjectWhereInput
+  subjects_none: SubjectWhereInput
+  school: SchoolWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [StudentWhereInput!]
+  OR: [StudentWhereInput!]
+  NOT: [StudentWhereInput!]
+}
+
+input StudentWhereUniqueInput {
+  id: ID
+}
+
+type Subject {
+  id: ID!
+  name: String!
+  assignee: User
+  class: Classroom!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type SubjectConnection {
+  pageInfo: PageInfo!
+  edges: [SubjectEdge]!
+  aggregate: AggregateSubject!
+}
+
+input SubjectCreateInput {
+  id: ID
+  name: String!
+  assignee: UserCreateOneInput
+  class: ClassroomCreateOneWithoutSubjectsInput!
+}
+
+input SubjectCreateManyInput {
+  create: [SubjectCreateInput!]
+  connect: [SubjectWhereUniqueInput!]
+}
+
+input SubjectCreateManyWithoutClassInput {
+  create: [SubjectCreateWithoutClassInput!]
+  connect: [SubjectWhereUniqueInput!]
+}
+
+input SubjectCreateWithoutClassInput {
+  id: ID
+  name: String!
+  assignee: UserCreateOneInput
+}
+
+type SubjectEdge {
+  node: Subject!
+  cursor: String!
+}
+
+enum SubjectOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type SubjectPreviousValues {
+  id: ID!
+  name: String!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input SubjectScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [SubjectScalarWhereInput!]
+  OR: [SubjectScalarWhereInput!]
+  NOT: [SubjectScalarWhereInput!]
+}
+
+type SubjectSubscriptionPayload {
+  mutation: MutationType!
+  node: Subject
+  updatedFields: [String!]
+  previousValues: SubjectPreviousValues
+}
+
+input SubjectSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: SubjectWhereInput
+  AND: [SubjectSubscriptionWhereInput!]
+  OR: [SubjectSubscriptionWhereInput!]
+  NOT: [SubjectSubscriptionWhereInput!]
+}
+
+input SubjectUpdateDataInput {
+  name: String
+  assignee: UserUpdateOneInput
+  class: ClassroomUpdateOneRequiredWithoutSubjectsInput
+}
+
+input SubjectUpdateInput {
+  name: String
+  assignee: UserUpdateOneInput
+  class: ClassroomUpdateOneRequiredWithoutSubjectsInput
+}
+
+input SubjectUpdateManyDataInput {
+  name: String
+}
+
+input SubjectUpdateManyInput {
+  create: [SubjectCreateInput!]
+  update: [SubjectUpdateWithWhereUniqueNestedInput!]
+  upsert: [SubjectUpsertWithWhereUniqueNestedInput!]
+  delete: [SubjectWhereUniqueInput!]
+  connect: [SubjectWhereUniqueInput!]
+  set: [SubjectWhereUniqueInput!]
+  disconnect: [SubjectWhereUniqueInput!]
+  deleteMany: [SubjectScalarWhereInput!]
+  updateMany: [SubjectUpdateManyWithWhereNestedInput!]
+}
+
+input SubjectUpdateManyMutationInput {
+  name: String
+}
+
+input SubjectUpdateManyWithoutClassInput {
+  create: [SubjectCreateWithoutClassInput!]
+  delete: [SubjectWhereUniqueInput!]
+  connect: [SubjectWhereUniqueInput!]
+  set: [SubjectWhereUniqueInput!]
+  disconnect: [SubjectWhereUniqueInput!]
+  update: [SubjectUpdateWithWhereUniqueWithoutClassInput!]
+  upsert: [SubjectUpsertWithWhereUniqueWithoutClassInput!]
+  deleteMany: [SubjectScalarWhereInput!]
+  updateMany: [SubjectUpdateManyWithWhereNestedInput!]
+}
+
+input SubjectUpdateManyWithWhereNestedInput {
+  where: SubjectScalarWhereInput!
+  data: SubjectUpdateManyDataInput!
+}
+
+input SubjectUpdateWithoutClassDataInput {
+  name: String
+  assignee: UserUpdateOneInput
+}
+
+input SubjectUpdateWithWhereUniqueNestedInput {
+  where: SubjectWhereUniqueInput!
+  data: SubjectUpdateDataInput!
+}
+
+input SubjectUpdateWithWhereUniqueWithoutClassInput {
+  where: SubjectWhereUniqueInput!
+  data: SubjectUpdateWithoutClassDataInput!
+}
+
+input SubjectUpsertWithWhereUniqueNestedInput {
+  where: SubjectWhereUniqueInput!
+  update: SubjectUpdateDataInput!
+  create: SubjectCreateInput!
+}
+
+input SubjectUpsertWithWhereUniqueWithoutClassInput {
+  where: SubjectWhereUniqueInput!
+  update: SubjectUpdateWithoutClassDataInput!
+  create: SubjectCreateWithoutClassInput!
+}
+
+input SubjectWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  assignee: UserWhereInput
+  class: ClassroomWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [SubjectWhereInput!]
+  OR: [SubjectWhereInput!]
+  NOT: [SubjectWhereInput!]
+}
+
+input SubjectWhereUniqueInput {
+  id: ID
+}
+
 type Subscription {
+  classroom(where: ClassroomSubscriptionWhereInput): ClassroomSubscriptionPayload
   country(where: CountrySubscriptionWhereInput): CountrySubscriptionPayload
   region(where: RegionSubscriptionWhereInput): RegionSubscriptionPayload
   school(where: SchoolSubscriptionWhereInput): SchoolSubscriptionPayload
+  student(where: StudentSubscriptionWhereInput): StudentSubscriptionPayload
+  subject(where: SubjectSubscriptionWhereInput): SubjectSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -703,6 +1680,11 @@ input UserCreateInput {
   phone: String
   password: String!
   role: Role
+}
+
+input UserCreateOneInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 type UserEdge {
@@ -758,6 +1740,15 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
+input UserUpdateDataInput {
+  username: String
+  email: String
+  school: SchoolUpdateOneInput
+  phone: String
+  password: String
+  role: Role
+}
+
 input UserUpdateInput {
   username: String
   email: String
@@ -773,6 +1764,20 @@ input UserUpdateManyMutationInput {
   phone: String
   password: String
   role: Role
+}
+
+input UserUpdateOneInput {
+  create: UserCreateInput
+  update: UserUpdateDataInput
+  upsert: UserUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: UserWhereUniqueInput
+}
+
+input UserUpsertNestedInput {
+  update: UserUpdateDataInput!
+  create: UserCreateInput!
 }
 
 input UserWhereInput {
