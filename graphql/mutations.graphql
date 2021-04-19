@@ -42,4 +42,14 @@ type Mutation {
     Update a region
     """
     updateRegion(data: RegionUpdateInput!, where: RegionWhereUniqueInput!): Region
+
+    """
+    Create a classroom
+    """
+    classRoom(input: ClassroomCreateInput!): ClassroomResponse!
+
+    """
+    Update a classroom
+    """
+    updateClassRoom(data: ClassroomUpdateInput!, where: ClassroomWhereUniqueInput): Classroom
 }

@@ -23,4 +23,9 @@ type Query {
     Retrieve all regions in a country
     """
     regions(input: RegionQueryInput): [Region]
+
+    """
+    Retrieve all classrooms in a school
+    """
+    getClassRooms: [Classroom]
 }

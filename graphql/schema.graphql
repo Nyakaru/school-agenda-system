@@ -70,6 +70,11 @@ type SchoolResponse {
     error: Error
 }
 
+type ClassroomResponse {
+    payload: Classroom
+    error: Error
+}
+
 type AuthPayload {
     token: String
     user: User
@@ -191,6 +196,40 @@ input RegionUpdateInput {
 input CountryUpdateOneInput {
     connect: CountryWhereUniqueInput
 }
+
+input ClassroomCreateInput {
+    name: String!
+    level: String!
+    school: SchoolCreateOneInput
+}
+
+input ClassroomUpdateInput {
+    name: String
+    level: String
+    students: StudentUpdateManyWithoutClassInput
+    subjects: SubjectUpdateManyWithoutClassInput
+}
+
+input StudentUpdateManyWithoutClassInput {
+    connect: [StudentWhereUniqueInput!]
+}
+
+input SubjectUpdateManyWithoutClassInput {
+    connect: [SubjectWhereUniqueInput!]
+}
+
+input StudentWhereUniqueInput {
+    id: ID
+}
+
+input SubjectWhereUniqueInput {
+    id: ID
+}
+
+input ClassroomWhereUniqueInput {
+    id: ID
+}
+
 enum Role {
     SUDO
     ADMIN

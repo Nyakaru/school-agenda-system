@@ -1,6 +1,7 @@
 //@ts-check
 import { acceptableUserPayload } from './user';
 import { acceptableSchoolPayload } from './school';
+import { acceptableClassRoomPayload } from './classRoom';
 
 export const checkPayload = async (schema, payload) => {
     try {
@@ -10,4 +11,4 @@ export const checkPayload = async (schema, payload) => {
     }
 };
 
-export default { acceptableUserPayload, acceptableSchoolPayload, checkPayload };
+export default { acceptableUserPayload, acceptableSchoolPayload, acceptableClassRoomPayload, checkPayload };
