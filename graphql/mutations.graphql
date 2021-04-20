@@ -52,4 +52,14 @@ type Mutation {
     Update a classroom
     """
     updateClassRoom(data: ClassroomUpdateInput!, where: ClassroomWhereUniqueInput): Classroom
+
+    """
+    Create a subject
+    """
+    addSubject(input: SubjectCreateInput!): SubjectResponse!
+
+    """
+    Update a subject
+    """
+    updateSubject(data: SubjectUpdateInput!, where: SubjectWhereUniqueInput): Subject
 }
