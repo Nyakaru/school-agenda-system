@@ -59,8 +59,42 @@ const regionFragment = /* GraphQL */ `
     }
 `;
 
+const classRoomFragment = /* GraphQL */ `
+    fragment classRoomWithDetails on Classroom {
+        id
+        name
+        level
+        school {
+            id
+            name
+            schoolCode
+            phone
+            email
+            level
+            address
+        }
+        students {
+            id
+            name
+            admNo
+        }
+        subjects {
+            id
+            assignee {
+                id
+                username
+                email
+                role
+                phone
+            }
+            name
+        }
+    }
+`;
+
 export default {
     schoolFragment,
     userFragment,
     regionFragment,
+    classRoomFragment,
 };
