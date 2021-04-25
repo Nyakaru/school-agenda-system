@@ -89,6 +89,12 @@ const classRoomFragment = /* GraphQL */ `
             }
             name
         }
+        classTeacher {
+            id
+            username
+            phone
+            email
+        }
     }
 `;
 

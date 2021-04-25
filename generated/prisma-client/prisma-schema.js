@@ -40,6 +40,7 @@ type Classroom {
   name: String!
   level: String!
   school: School!
+  classTeacher: User
   students(where: StudentWhereInput, orderBy: StudentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Student!]
   subjects(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subject!]
   createdAt: DateTime
@@ -57,6 +58,7 @@ input ClassroomCreateInput {
   name: String!
   level: String!
   school: SchoolCreateOneInput!
+  classTeacher: UserCreateOneInput
   students: StudentCreateManyWithoutClassInput
   subjects: SubjectCreateManyWithoutClassInput
 }
@@ -76,6 +78,7 @@ input ClassroomCreateWithoutStudentsInput {
   name: String!
   level: String!
   school: SchoolCreateOneInput!
+  classTeacher: UserCreateOneInput
   subjects: SubjectCreateManyWithoutClassInput
 }
 
@@ -84,6 +87,7 @@ input ClassroomCreateWithoutSubjectsInput {
   name: String!
   level: String!
   school: SchoolCreateOneInput!
+  classTeacher: UserCreateOneInput
   students: StudentCreateManyWithoutClassInput
 }
 
@@ -135,6 +139,7 @@ input ClassroomUpdateInput {
   name: String
   level: String
   school: SchoolUpdateOneRequiredInput
+  classTeacher: UserUpdateOneInput
   students: StudentUpdateManyWithoutClassInput
   subjects: SubjectUpdateManyWithoutClassInput
 }
@@ -164,6 +169,7 @@ input ClassroomUpdateWithoutStudentsDataInput {
   name: String
   level: String
   school: SchoolUpdateOneRequiredInput
+  classTeacher: UserUpdateOneInput
   subjects: SubjectUpdateManyWithoutClassInput
 }
 
@@ -171,6 +177,7 @@ input ClassroomUpdateWithoutSubjectsDataInput {
   name: String
   level: String
   school: SchoolUpdateOneRequiredInput
+  classTeacher: UserUpdateOneInput
   students: StudentUpdateManyWithoutClassInput
 }
 
@@ -228,6 +235,7 @@ input ClassroomWhereInput {
   level_ends_with: String
   level_not_ends_with: String
   school: SchoolWhereInput
+  classTeacher: UserWhereInput
   students_every: StudentWhereInput
   students_some: StudentWhereInput
   students_none: StudentWhereInput
