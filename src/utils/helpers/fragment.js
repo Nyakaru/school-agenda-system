@@ -92,9 +92,29 @@ const classRoomFragment = /* GraphQL */ `
     }
 `;
 
+const subjectFragment = /* GraphQL */ `
+    fragment SubjectWithDetails on Subject {
+        id
+        name
+        assignee {
+            id
+            username
+            email
+            role
+            phone
+        }
+        class {
+            id
+            name
+            level
+        }
+    }
+`;
+
 export default {
     schoolFragment,
     userFragment,
     regionFragment,
     classRoomFragment,
+    subjectFragment,
 };

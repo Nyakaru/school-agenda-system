@@ -75,6 +75,11 @@ type ClassroomResponse {
     error: Error
 }
 
+type SubjectResponse {
+    payload: Subject
+    error: Error
+}
+
 type AuthPayload {
     token: String
     user: User
@@ -105,7 +110,7 @@ input LoginInput {
     password: String!
 }
 
-input RegionQueryInput {
+input GlobalQueryInput {
     id: String!
 }
 input SchoolCreateInput {
@@ -228,6 +233,35 @@ input SubjectWhereUniqueInput {
 
 input ClassroomWhereUniqueInput {
     id: ID
+}
+
+input UserCreateOneInput {
+    connect: UserWhereUniqueInput
+}
+
+input ClassroomCreateOneWithoutSubjectsInput {
+    connect: ClassroomWhereUniqueInput
+}
+
+input SubjectCreateInput {
+    id: ID
+    name: String!
+    assignee: UserCreateOneInput
+    class: ClassroomCreateOneWithoutSubjectsInput!
+}
+
+input UserUpdateOneInput {
+    connect: UserWhereUniqueInput
+}
+
+input ClassroomUpdateOneRequiredWithoutSubjectsInput {
+    connect: ClassroomWhereUniqueInput
+}
+
+input SubjectUpdateInput {
+    name: String
+    assignee: UserUpdateOneInput
+    class: ClassroomUpdateOneRequiredWithoutSubjectsInput
 }
 
 enum Role {

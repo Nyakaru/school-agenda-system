@@ -2,7 +2,7 @@
 import { acceptableUserPayload } from './user';
 import { acceptableSchoolPayload } from './school';
 import { acceptableClassRoomPayload } from './classRoom';
-
+import { acceptableSubjectPayload } from './subject';
 export const checkPayload = async (schema, payload) => {
     try {
         await schema.validate(payload);
@@ -11,4 +11,4 @@ export const checkPayload = async (schema, payload) => {
     }
 };
 
-export default { acceptableUserPayload, acceptableSchoolPayload, acceptableClassRoomPayload, checkPayload };
+export default { acceptableUserPayload, acceptableSchoolPayload, acceptableClassRoomPayload, acceptableSubjectPayload, checkPayload };
