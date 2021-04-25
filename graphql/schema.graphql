@@ -38,6 +38,7 @@ type Classroom {
     name: String!
     level: String!
     school: School!
+    classTeacher: User
     students: [Student]
     subjects: [Subject]
 }
@@ -206,6 +207,7 @@ input ClassroomCreateInput {
     name: String!
     level: String!
     school: SchoolCreateOneInput
+    classTeacher: UserCreateOneInput
 }
 
 input ClassroomUpdateInput {
@@ -213,6 +215,7 @@ input ClassroomUpdateInput {
     level: String
     students: StudentUpdateManyWithoutClassInput
     subjects: SubjectUpdateManyWithoutClassInput
+    classTeacher: UserUpdateOneInput
 }
 
 input StudentUpdateManyWithoutClassInput {

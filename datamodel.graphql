@@ -45,6 +45,7 @@ type Classroom {
     name: String!
     level: String!
     school: School! @relation(link: INLINE)
+    classTeacher: User @relation(link: INLINE)
     students: [Student]
     subjects: [Subject]
     createdAt: DateTime @createdAt
