@@ -62,4 +62,9 @@ type Mutation {
     Update a subject
     """
     updateSubject(data: SubjectUpdateInput!, where: SubjectWhereUniqueInput): Subject
+
+    """
+    Create a class level
+    """
+    addClassLevel(input: ClassLevelCreateInput!): ClassLevelResponse!
 }

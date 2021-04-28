@@ -20,7 +20,6 @@ export const sendMessage = async (recipients, message) => {
             to: recipients,
             message: message,
         });
-        console.log(result);
     } catch (ex) {
         console.error(ex);
     }

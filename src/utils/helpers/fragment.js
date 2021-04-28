@@ -63,7 +63,10 @@ const classRoomFragment = /* GraphQL */ `
     fragment classRoomWithDetails on Classroom {
         id
         name
-        level
+        level {
+            id
+            levelName
+        }
         school {
             id
             name
@@ -117,10 +120,28 @@ const subjectFragment = /* GraphQL */ `
     }
 `;
 
+const classLevelFragment = /* GraphQL */ `
+    fragment ClassLevelWithDetails on ClassLevel {
+        id
+        levelName
+        description
+        school {
+            id
+            name
+            schoolCode
+            phone
+            email
+            level
+            address
+        }
+    }
+`;
+
 export default {
     schoolFragment,
     userFragment,
     regionFragment,
     classRoomFragment,
     subjectFragment,
+    classLevelFragment,
 };
