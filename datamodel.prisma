@@ -21,6 +21,7 @@ type School {
     imageUrl: String
     level: Level! @default(value: GENERAL)
     students: [Student]
+    classLevels: [ClassLevel]
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
 }
@@ -42,8 +43,8 @@ type Region {
 
 type Classroom {
     id: ID! @id
-    name: String!
-    level: String!
+    name: String! @unique
+    level: ClassLevel! @relation(link: INLINE)
     school: School! @relation(link: INLINE)
     classTeacher: User @relation(link: INLINE)
     students: [Student]
@@ -72,6 +73,14 @@ type Subject {
     class: Classroom! @relation(link: INLINE)
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
+}
+
+type ClassLevel {
+    id: ID! @id
+    levelName: String!
+    description: String
+    school: School! @relation(link: INLINE)
+    classRooms: [Classroom]
 }
 
 enum Role {

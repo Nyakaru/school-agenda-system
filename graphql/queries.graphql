@@ -33,4 +33,9 @@ type Query {
     Retrieve all subjects in a class
     """
     getSubjects(input: GlobalQueryInput): [Subject]
+
+    """
+    Retrieve all class levels in a school
+    """
+    getClassLevels(input: GlobalQueryInput): [ClassLevel]
 }

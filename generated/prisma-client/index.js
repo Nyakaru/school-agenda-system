@@ -33,6 +33,10 @@ var models = [
     embedded: false
   },
   {
+    name: "ClassLevel",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },

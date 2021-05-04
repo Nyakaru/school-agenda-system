@@ -36,7 +36,7 @@ type Region {
 type Classroom {
     id: ID!
     name: String!
-    level: String!
+    level: ClassLevel!
     school: School!
     classTeacher: User
     students: [Student]
@@ -61,6 +61,15 @@ type Subject {
     class: Classroom!
 }
 
+type ClassLevel {
+    id: ID!
+    levelName: String!
+    description: String
+    school: School!
+    totalClassRooms: Int!
+    totalStudents: Int!
+}
+
 type GeneralResponse {
     message: String
     error: Error
@@ -78,6 +87,11 @@ type ClassroomResponse {
 
 type SubjectResponse {
     payload: Subject
+    error: Error
+}
+
+type ClassLevelResponse {
+    payload: ClassLevel
     error: Error
 }
 
@@ -185,6 +199,10 @@ input CountryWhereUniqueInput {
     id: ID
 }
 
+input ClassLevelWhereUniqueInput {
+    id: ID
+}
+
 input RegionCreateInput {
     name: String!
     country: CountryCreateOneInput!
@@ -203,9 +221,13 @@ input CountryUpdateOneInput {
     connect: CountryWhereUniqueInput
 }
 
+input ClassLevelCreateOneInput {
+    connect: ClassLevelWhereUniqueInput
+}
+
 input ClassroomCreateInput {
     name: String!
-    level: String!
+    level: ClassLevelCreateOneInput!
     school: SchoolCreateOneInput
     classTeacher: UserCreateOneInput
 }
@@ -251,6 +273,13 @@ input SubjectCreateInput {
     name: String!
     assignee: UserCreateOneInput
     class: ClassroomCreateOneWithoutSubjectsInput!
+}
+
+input ClassLevelCreateInput {
+    id: ID
+    levelName: String!
+    description: String
+    school: SchoolCreateOneInput
 }
 
 input UserUpdateOneInput {
