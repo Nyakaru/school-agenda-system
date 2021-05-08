@@ -39,7 +39,6 @@ const school = async (_, { input }, context, _info) => {
         if (!regionExists) {
             return utils.sendErrorResponse(field, message);
         }
-
         const school = await context.prisma.createSchool(input).$fragment(utils.schoolFragment);
         return {
             payload: school,

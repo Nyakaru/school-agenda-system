@@ -4,6 +4,7 @@ import SchoolMutations from './school';
 import CountryMutations from './countries';
 import ClassRoomMutations from './classRoom';
 import SubjectMutations from './subject';
+import StudentMutations from './student';
 
 export default {
     ...UserMutations,
@@ -11,4 +12,5 @@ export default {
     ...CountryMutations,
     ...ClassRoomMutations,
     ...SubjectMutations,
+    ...StudentMutations,
 };

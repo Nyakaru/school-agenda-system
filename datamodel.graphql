@@ -1,10 +1,13 @@
 type User {
     id: ID! @id
-    username: String!
+    firstName: String!
+    middleName: String
+    lastName: String!
     email: String @unique
     school: School @relation(link: INLINE)
     phone: String @unique
     password: String!
+    gender: Gender @default(value: NA)
     role: Role! @default(value: USER)
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
@@ -18,8 +21,10 @@ type School {
     email: String
     phone: String! @unique
     schoolCode: String! @unique
+    classes: [Classroom]
+    subjects: [Subject]
     imageUrl: String
-    level: Level! @default(value: GENERAL)
+    level: Level @default(value: GENERAL)
     students: [Student]
     classLevels: [ClassLevel]
     createdAt: DateTime @createdAt
@@ -45,23 +50,28 @@ type Classroom {
     id: ID! @id
     name: String! @unique
     level: ClassLevel! @relation(link: INLINE)
-    school: School! @relation(link: INLINE)
+    school: School
+    capacity: String!
     classTeacher: User @relation(link: INLINE)
     students: [Student]
-    subjects: [Subject]
+    subjects: [ClassSubject]
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
 }
 
 type Student {
     id: ID! @id
-    name: String!
-    admNo: String!
+    firstName: String!
+    middleName: String
+    lastName: String!
+    admNo: String! @unique
     domitory: String
     class: Classroom @relation(link: INLINE)
     feeBalance: String
-    subjects: [Subject]
+    subjects: [ClassSubject]
+    gender: Gender @default(value: NA)
     school: School!
+    prefect: Prefect @default(value: NORMAL)
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
 }
@@ -69,17 +79,23 @@ type Student {
 type Subject {
     id: ID! @id
     name: String!
-    assignee: User @relation(link: INLINE)
-    class: Classroom! @relation(link: INLINE)
+    school: School! @relation(link: INLINE)
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
+}
+
+type ClassSubject {
+    id: ID! @id
+    subject: Subject! @relation(link: INLINE)
+    assignee: User @relation(link: INLINE)
+    class: Classroom! @relation(link: INLINE)
 }
 
 type ClassLevel {
     id: ID! @id
     levelName: String! @unique
     description: String
-    school: School! @relation(link: INLINE)
+    school: School
     classRooms: [Classroom]
 }
 
@@ -98,4 +114,16 @@ enum Level {
     PRIMARY
     HIGHSCHOOL
     GENERAL
+}
+
+enum Prefect {
+    PREFECT
+    ASSISTANT
+    NORMAL
+}
+
+enum Gender {
+    MALE
+    FEMALE
+    NA
 }

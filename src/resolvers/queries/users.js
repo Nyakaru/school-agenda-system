@@ -23,7 +23,7 @@ const users = async (_, _args, context, _info) => {
  */
 const schoolUsers = async (_, _args, context, _info) => {
     try {
-        const users = await context.prisma.users({ where: { school: { schoolCode: context.user.school } } }).$fragment(utils.userFragment);
+        const users = await context.prisma.users({ where: { school: { id: context.user.school } } }).$fragment(utils.userFragment);
         return users;
     } catch (error) {
         console.log(error);
