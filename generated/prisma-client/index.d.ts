@@ -17,6 +17,7 @@ export type Maybe<T> = T | undefined | null;
 
 export interface Exists {
   classLevel: (where?: ClassLevelWhereInput) => Promise<boolean>;
+  classSubject: (where?: ClassSubjectWhereInput) => Promise<boolean>;
   classroom: (where?: ClassroomWhereInput) => Promise<boolean>;
   country: (where?: CountryWhereInput) => Promise<boolean>;
   region: (where?: RegionWhereInput) => Promise<boolean>;
@@ -64,6 +65,27 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => ClassLevelConnectionPromise;
+  classSubject: (
+    where: ClassSubjectWhereUniqueInput
+  ) => ClassSubjectNullablePromise;
+  classSubjects: (args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<ClassSubject>;
+  classSubjectsConnection: (args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => ClassSubjectConnectionPromise;
   classroom: (where: ClassroomWhereUniqueInput) => ClassroomNullablePromise;
   classrooms: (args?: {
     where?: ClassroomWhereInput;
@@ -219,6 +241,22 @@ export interface Prisma {
   }) => ClassLevelPromise;
   deleteClassLevel: (where: ClassLevelWhereUniqueInput) => ClassLevelPromise;
   deleteManyClassLevels: (where?: ClassLevelWhereInput) => BatchPayloadPromise;
+  createClassSubject: (data: ClassSubjectCreateInput) => ClassSubjectPromise;
+  updateClassSubject: (args: {
+    data: ClassSubjectUpdateInput;
+    where: ClassSubjectWhereUniqueInput;
+  }) => ClassSubjectPromise;
+  upsertClassSubject: (args: {
+    where: ClassSubjectWhereUniqueInput;
+    create: ClassSubjectCreateInput;
+    update: ClassSubjectUpdateInput;
+  }) => ClassSubjectPromise;
+  deleteClassSubject: (
+    where: ClassSubjectWhereUniqueInput
+  ) => ClassSubjectPromise;
+  deleteManyClassSubjects: (
+    where?: ClassSubjectWhereInput
+  ) => BatchPayloadPromise;
   createClassroom: (data: ClassroomCreateInput) => ClassroomPromise;
   updateClassroom: (args: {
     data: ClassroomUpdateInput;
@@ -343,6 +381,9 @@ export interface Subscription {
   classLevel: (
     where?: ClassLevelSubscriptionWhereInput
   ) => ClassLevelSubscriptionPayloadSubscription;
+  classSubject: (
+    where?: ClassSubjectSubscriptionWhereInput
+  ) => ClassSubjectSubscriptionPayloadSubscription;
   classroom: (
     where?: ClassroomSubscriptionWhereInput
   ) => ClassroomSubscriptionPayloadSubscription;
@@ -376,6 +417,8 @@ export interface ClientConstructor<T> {
 
 export type Level = "PRESCHOOL" | "PRIMARY" | "HIGHSCHOOL" | "GENERAL";
 
+export type Gender = "MALE" | "FEMALE" | "NA";
+
 export type Role =
   | "SUDO"
   | "ADMIN"
@@ -385,21 +428,45 @@ export type Role =
   | "STOREMAN"
   | "USER";
 
-export type StudentOrderByInput =
+export type Prefect = "PREFECT" | "ASSISTANT" | "NORMAL";
+
+export type ClassroomOrderByInput =
   | "id_ASC"
   | "id_DESC"
   | "name_ASC"
   | "name_DESC"
+  | "capacity_ASC"
+  | "capacity_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type StudentOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "firstName_ASC"
+  | "firstName_DESC"
+  | "middleName_ASC"
+  | "middleName_DESC"
+  | "lastName_ASC"
+  | "lastName_DESC"
   | "admNo_ASC"
   | "admNo_DESC"
   | "domitory_ASC"
   | "domitory_DESC"
   | "feeBalance_ASC"
   | "feeBalance_DESC"
+  | "gender_ASC"
+  | "gender_DESC"
+  | "prefect_ASC"
+  | "prefect_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
   | "updatedAt_DESC";
+
+export type ClassSubjectOrderByInput = "id_ASC" | "id_DESC";
 
 export type SubjectOrderByInput =
   | "id_ASC"
@@ -418,16 +485,6 @@ export type ClassLevelOrderByInput =
   | "levelName_DESC"
   | "description_ASC"
   | "description_DESC";
-
-export type ClassroomOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "name_ASC"
-  | "name_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
 
 export type CountryOrderByInput =
   | "id_ASC"
@@ -474,14 +531,20 @@ export type SchoolOrderByInput =
 export type UserOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "username_ASC"
-  | "username_DESC"
+  | "firstName_ASC"
+  | "firstName_DESC"
+  | "middleName_ASC"
+  | "middleName_DESC"
+  | "lastName_ASC"
+  | "lastName_DESC"
   | "email_ASC"
   | "email_DESC"
   | "phone_ASC"
   | "phone_DESC"
   | "password_ASC"
   | "password_DESC"
+  | "gender_ASC"
+  | "gender_DESC"
   | "role_ASC"
   | "role_DESC"
   | "createdAt_ASC"
@@ -495,103 +558,6 @@ export type ClassLevelWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   levelName?: Maybe<String>;
 }>;
-
-export interface StudentWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  admNo?: Maybe<String>;
-  admNo_not?: Maybe<String>;
-  admNo_in?: Maybe<String[] | String>;
-  admNo_not_in?: Maybe<String[] | String>;
-  admNo_lt?: Maybe<String>;
-  admNo_lte?: Maybe<String>;
-  admNo_gt?: Maybe<String>;
-  admNo_gte?: Maybe<String>;
-  admNo_contains?: Maybe<String>;
-  admNo_not_contains?: Maybe<String>;
-  admNo_starts_with?: Maybe<String>;
-  admNo_not_starts_with?: Maybe<String>;
-  admNo_ends_with?: Maybe<String>;
-  admNo_not_ends_with?: Maybe<String>;
-  domitory?: Maybe<String>;
-  domitory_not?: Maybe<String>;
-  domitory_in?: Maybe<String[] | String>;
-  domitory_not_in?: Maybe<String[] | String>;
-  domitory_lt?: Maybe<String>;
-  domitory_lte?: Maybe<String>;
-  domitory_gt?: Maybe<String>;
-  domitory_gte?: Maybe<String>;
-  domitory_contains?: Maybe<String>;
-  domitory_not_contains?: Maybe<String>;
-  domitory_starts_with?: Maybe<String>;
-  domitory_not_starts_with?: Maybe<String>;
-  domitory_ends_with?: Maybe<String>;
-  domitory_not_ends_with?: Maybe<String>;
-  class?: Maybe<ClassroomWhereInput>;
-  feeBalance?: Maybe<String>;
-  feeBalance_not?: Maybe<String>;
-  feeBalance_in?: Maybe<String[] | String>;
-  feeBalance_not_in?: Maybe<String[] | String>;
-  feeBalance_lt?: Maybe<String>;
-  feeBalance_lte?: Maybe<String>;
-  feeBalance_gt?: Maybe<String>;
-  feeBalance_gte?: Maybe<String>;
-  feeBalance_contains?: Maybe<String>;
-  feeBalance_not_contains?: Maybe<String>;
-  feeBalance_starts_with?: Maybe<String>;
-  feeBalance_not_starts_with?: Maybe<String>;
-  feeBalance_ends_with?: Maybe<String>;
-  feeBalance_not_ends_with?: Maybe<String>;
-  subjects_every?: Maybe<SubjectWhereInput>;
-  subjects_some?: Maybe<SubjectWhereInput>;
-  subjects_none?: Maybe<SubjectWhereInput>;
-  school?: Maybe<SchoolWhereInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<StudentWhereInput[] | StudentWhereInput>;
-  OR?: Maybe<StudentWhereInput[] | StudentWhereInput>;
-  NOT?: Maybe<StudentWhereInput[] | StudentWhereInput>;
-}
 
 export interface ClassroomWhereInput {
   id?: Maybe<ID_Input>;
@@ -624,13 +590,27 @@ export interface ClassroomWhereInput {
   name_not_ends_with?: Maybe<String>;
   level?: Maybe<ClassLevelWhereInput>;
   school?: Maybe<SchoolWhereInput>;
+  capacity?: Maybe<String>;
+  capacity_not?: Maybe<String>;
+  capacity_in?: Maybe<String[] | String>;
+  capacity_not_in?: Maybe<String[] | String>;
+  capacity_lt?: Maybe<String>;
+  capacity_lte?: Maybe<String>;
+  capacity_gt?: Maybe<String>;
+  capacity_gte?: Maybe<String>;
+  capacity_contains?: Maybe<String>;
+  capacity_not_contains?: Maybe<String>;
+  capacity_starts_with?: Maybe<String>;
+  capacity_not_starts_with?: Maybe<String>;
+  capacity_ends_with?: Maybe<String>;
+  capacity_not_ends_with?: Maybe<String>;
   classTeacher?: Maybe<UserWhereInput>;
   students_every?: Maybe<StudentWhereInput>;
   students_some?: Maybe<StudentWhereInput>;
   students_none?: Maybe<StudentWhereInput>;
-  subjects_every?: Maybe<SubjectWhereInput>;
-  subjects_some?: Maybe<SubjectWhereInput>;
-  subjects_none?: Maybe<SubjectWhereInput>;
+  subjects_every?: Maybe<ClassSubjectWhereInput>;
+  subjects_some?: Maybe<ClassSubjectWhereInput>;
+  subjects_none?: Maybe<ClassSubjectWhereInput>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -790,6 +770,12 @@ export interface SchoolWhereInput {
   schoolCode_not_starts_with?: Maybe<String>;
   schoolCode_ends_with?: Maybe<String>;
   schoolCode_not_ends_with?: Maybe<String>;
+  classes_every?: Maybe<ClassroomWhereInput>;
+  classes_some?: Maybe<ClassroomWhereInput>;
+  classes_none?: Maybe<ClassroomWhereInput>;
+  subjects_every?: Maybe<SubjectWhereInput>;
+  subjects_some?: Maybe<SubjectWhereInput>;
+  subjects_none?: Maybe<SubjectWhereInput>;
   imageUrl?: Maybe<String>;
   imageUrl_not?: Maybe<String>;
   imageUrl_in?: Maybe<String[] | String>;
@@ -936,6 +922,213 @@ export interface CountryWhereInput {
   NOT?: Maybe<CountryWhereInput[] | CountryWhereInput>;
 }
 
+export interface SubjectWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  school?: Maybe<SchoolWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<SubjectWhereInput[] | SubjectWhereInput>;
+  OR?: Maybe<SubjectWhereInput[] | SubjectWhereInput>;
+  NOT?: Maybe<SubjectWhereInput[] | SubjectWhereInput>;
+}
+
+export interface StudentWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  firstName?: Maybe<String>;
+  firstName_not?: Maybe<String>;
+  firstName_in?: Maybe<String[] | String>;
+  firstName_not_in?: Maybe<String[] | String>;
+  firstName_lt?: Maybe<String>;
+  firstName_lte?: Maybe<String>;
+  firstName_gt?: Maybe<String>;
+  firstName_gte?: Maybe<String>;
+  firstName_contains?: Maybe<String>;
+  firstName_not_contains?: Maybe<String>;
+  firstName_starts_with?: Maybe<String>;
+  firstName_not_starts_with?: Maybe<String>;
+  firstName_ends_with?: Maybe<String>;
+  firstName_not_ends_with?: Maybe<String>;
+  middleName?: Maybe<String>;
+  middleName_not?: Maybe<String>;
+  middleName_in?: Maybe<String[] | String>;
+  middleName_not_in?: Maybe<String[] | String>;
+  middleName_lt?: Maybe<String>;
+  middleName_lte?: Maybe<String>;
+  middleName_gt?: Maybe<String>;
+  middleName_gte?: Maybe<String>;
+  middleName_contains?: Maybe<String>;
+  middleName_not_contains?: Maybe<String>;
+  middleName_starts_with?: Maybe<String>;
+  middleName_not_starts_with?: Maybe<String>;
+  middleName_ends_with?: Maybe<String>;
+  middleName_not_ends_with?: Maybe<String>;
+  lastName?: Maybe<String>;
+  lastName_not?: Maybe<String>;
+  lastName_in?: Maybe<String[] | String>;
+  lastName_not_in?: Maybe<String[] | String>;
+  lastName_lt?: Maybe<String>;
+  lastName_lte?: Maybe<String>;
+  lastName_gt?: Maybe<String>;
+  lastName_gte?: Maybe<String>;
+  lastName_contains?: Maybe<String>;
+  lastName_not_contains?: Maybe<String>;
+  lastName_starts_with?: Maybe<String>;
+  lastName_not_starts_with?: Maybe<String>;
+  lastName_ends_with?: Maybe<String>;
+  lastName_not_ends_with?: Maybe<String>;
+  admNo?: Maybe<String>;
+  admNo_not?: Maybe<String>;
+  admNo_in?: Maybe<String[] | String>;
+  admNo_not_in?: Maybe<String[] | String>;
+  admNo_lt?: Maybe<String>;
+  admNo_lte?: Maybe<String>;
+  admNo_gt?: Maybe<String>;
+  admNo_gte?: Maybe<String>;
+  admNo_contains?: Maybe<String>;
+  admNo_not_contains?: Maybe<String>;
+  admNo_starts_with?: Maybe<String>;
+  admNo_not_starts_with?: Maybe<String>;
+  admNo_ends_with?: Maybe<String>;
+  admNo_not_ends_with?: Maybe<String>;
+  domitory?: Maybe<String>;
+  domitory_not?: Maybe<String>;
+  domitory_in?: Maybe<String[] | String>;
+  domitory_not_in?: Maybe<String[] | String>;
+  domitory_lt?: Maybe<String>;
+  domitory_lte?: Maybe<String>;
+  domitory_gt?: Maybe<String>;
+  domitory_gte?: Maybe<String>;
+  domitory_contains?: Maybe<String>;
+  domitory_not_contains?: Maybe<String>;
+  domitory_starts_with?: Maybe<String>;
+  domitory_not_starts_with?: Maybe<String>;
+  domitory_ends_with?: Maybe<String>;
+  domitory_not_ends_with?: Maybe<String>;
+  class?: Maybe<ClassroomWhereInput>;
+  feeBalance?: Maybe<String>;
+  feeBalance_not?: Maybe<String>;
+  feeBalance_in?: Maybe<String[] | String>;
+  feeBalance_not_in?: Maybe<String[] | String>;
+  feeBalance_lt?: Maybe<String>;
+  feeBalance_lte?: Maybe<String>;
+  feeBalance_gt?: Maybe<String>;
+  feeBalance_gte?: Maybe<String>;
+  feeBalance_contains?: Maybe<String>;
+  feeBalance_not_contains?: Maybe<String>;
+  feeBalance_starts_with?: Maybe<String>;
+  feeBalance_not_starts_with?: Maybe<String>;
+  feeBalance_ends_with?: Maybe<String>;
+  feeBalance_not_ends_with?: Maybe<String>;
+  subjects_every?: Maybe<ClassSubjectWhereInput>;
+  subjects_some?: Maybe<ClassSubjectWhereInput>;
+  subjects_none?: Maybe<ClassSubjectWhereInput>;
+  gender?: Maybe<Gender>;
+  gender_not?: Maybe<Gender>;
+  gender_in?: Maybe<Gender[] | Gender>;
+  gender_not_in?: Maybe<Gender[] | Gender>;
+  school?: Maybe<SchoolWhereInput>;
+  prefect?: Maybe<Prefect>;
+  prefect_not?: Maybe<Prefect>;
+  prefect_in?: Maybe<Prefect[] | Prefect>;
+  prefect_not_in?: Maybe<Prefect[] | Prefect>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<StudentWhereInput[] | StudentWhereInput>;
+  OR?: Maybe<StudentWhereInput[] | StudentWhereInput>;
+  NOT?: Maybe<StudentWhereInput[] | StudentWhereInput>;
+}
+
+export interface ClassSubjectWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  subject?: Maybe<SubjectWhereInput>;
+  assignee?: Maybe<UserWhereInput>;
+  class?: Maybe<ClassroomWhereInput>;
+  AND?: Maybe<ClassSubjectWhereInput[] | ClassSubjectWhereInput>;
+  OR?: Maybe<ClassSubjectWhereInput[] | ClassSubjectWhereInput>;
+  NOT?: Maybe<ClassSubjectWhereInput[] | ClassSubjectWhereInput>;
+}
+
 export interface UserWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
@@ -951,20 +1144,48 @@ export interface UserWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  username_not?: Maybe<String>;
-  username_in?: Maybe<String[] | String>;
-  username_not_in?: Maybe<String[] | String>;
-  username_lt?: Maybe<String>;
-  username_lte?: Maybe<String>;
-  username_gt?: Maybe<String>;
-  username_gte?: Maybe<String>;
-  username_contains?: Maybe<String>;
-  username_not_contains?: Maybe<String>;
-  username_starts_with?: Maybe<String>;
-  username_not_starts_with?: Maybe<String>;
-  username_ends_with?: Maybe<String>;
-  username_not_ends_with?: Maybe<String>;
+  firstName?: Maybe<String>;
+  firstName_not?: Maybe<String>;
+  firstName_in?: Maybe<String[] | String>;
+  firstName_not_in?: Maybe<String[] | String>;
+  firstName_lt?: Maybe<String>;
+  firstName_lte?: Maybe<String>;
+  firstName_gt?: Maybe<String>;
+  firstName_gte?: Maybe<String>;
+  firstName_contains?: Maybe<String>;
+  firstName_not_contains?: Maybe<String>;
+  firstName_starts_with?: Maybe<String>;
+  firstName_not_starts_with?: Maybe<String>;
+  firstName_ends_with?: Maybe<String>;
+  firstName_not_ends_with?: Maybe<String>;
+  middleName?: Maybe<String>;
+  middleName_not?: Maybe<String>;
+  middleName_in?: Maybe<String[] | String>;
+  middleName_not_in?: Maybe<String[] | String>;
+  middleName_lt?: Maybe<String>;
+  middleName_lte?: Maybe<String>;
+  middleName_gt?: Maybe<String>;
+  middleName_gte?: Maybe<String>;
+  middleName_contains?: Maybe<String>;
+  middleName_not_contains?: Maybe<String>;
+  middleName_starts_with?: Maybe<String>;
+  middleName_not_starts_with?: Maybe<String>;
+  middleName_ends_with?: Maybe<String>;
+  middleName_not_ends_with?: Maybe<String>;
+  lastName?: Maybe<String>;
+  lastName_not?: Maybe<String>;
+  lastName_in?: Maybe<String[] | String>;
+  lastName_not_in?: Maybe<String[] | String>;
+  lastName_lt?: Maybe<String>;
+  lastName_lte?: Maybe<String>;
+  lastName_gt?: Maybe<String>;
+  lastName_gte?: Maybe<String>;
+  lastName_contains?: Maybe<String>;
+  lastName_not_contains?: Maybe<String>;
+  lastName_starts_with?: Maybe<String>;
+  lastName_not_starts_with?: Maybe<String>;
+  lastName_ends_with?: Maybe<String>;
+  lastName_not_ends_with?: Maybe<String>;
   email?: Maybe<String>;
   email_not?: Maybe<String>;
   email_in?: Maybe<String[] | String>;
@@ -1008,6 +1229,10 @@ export interface UserWhereInput {
   password_not_starts_with?: Maybe<String>;
   password_ends_with?: Maybe<String>;
   password_not_ends_with?: Maybe<String>;
+  gender?: Maybe<Gender>;
+  gender_not?: Maybe<Gender>;
+  gender_in?: Maybe<Gender[] | Gender>;
+  gender_not_in?: Maybe<Gender[] | Gender>;
   role?: Maybe<Role>;
   role_not?: Maybe<Role>;
   role_in?: Maybe<Role[] | Role>;
@@ -1033,57 +1258,9 @@ export interface UserWhereInput {
   NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
-export interface SubjectWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  assignee?: Maybe<UserWhereInput>;
-  class?: Maybe<ClassroomWhereInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<SubjectWhereInput[] | SubjectWhereInput>;
-  OR?: Maybe<SubjectWhereInput[] | SubjectWhereInput>;
-  NOT?: Maybe<SubjectWhereInput[] | SubjectWhereInput>;
-}
+export type ClassSubjectWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
 
 export type ClassroomWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
@@ -1106,6 +1283,7 @@ export type SchoolWhereUniqueInput = AtLeastOne<{
 
 export type StudentWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
+  admNo?: Maybe<String>;
 }>;
 
 export type SubjectWhereUniqueInput = AtLeastOne<{
@@ -1122,7 +1300,7 @@ export interface ClassLevelCreateInput {
   id?: Maybe<ID_Input>;
   levelName: String;
   description?: Maybe<String>;
-  school: SchoolCreateOneWithoutClassLevelsInput;
+  school?: Maybe<SchoolCreateOneWithoutClassLevelsInput>;
   classRooms?: Maybe<ClassroomCreateManyWithoutLevelInput>;
 }
 
@@ -1139,6 +1317,8 @@ export interface SchoolCreateWithoutClassLevelsInput {
   email?: Maybe<String>;
   phone: String;
   schoolCode: String;
+  classes?: Maybe<ClassroomCreateManyWithoutSchoolInput>;
+  subjects?: Maybe<SubjectCreateManyWithoutSchoolInput>;
   imageUrl?: Maybe<String>;
   level?: Maybe<Level>;
   students?: Maybe<StudentCreateManyWithoutSchoolInput>;
@@ -1165,35 +1345,21 @@ export interface CountryCreateInput {
   name: String;
 }
 
-export interface StudentCreateManyWithoutSchoolInput {
+export interface ClassroomCreateManyWithoutSchoolInput {
   create?: Maybe<
-    StudentCreateWithoutSchoolInput[] | StudentCreateWithoutSchoolInput
+    ClassroomCreateWithoutSchoolInput[] | ClassroomCreateWithoutSchoolInput
   >;
-  connect?: Maybe<StudentWhereUniqueInput[] | StudentWhereUniqueInput>;
+  connect?: Maybe<ClassroomWhereUniqueInput[] | ClassroomWhereUniqueInput>;
 }
 
-export interface StudentCreateWithoutSchoolInput {
-  id?: Maybe<ID_Input>;
-  name: String;
-  admNo: String;
-  domitory?: Maybe<String>;
-  class?: Maybe<ClassroomCreateOneWithoutStudentsInput>;
-  feeBalance?: Maybe<String>;
-  subjects?: Maybe<SubjectCreateManyInput>;
-}
-
-export interface ClassroomCreateOneWithoutStudentsInput {
-  create?: Maybe<ClassroomCreateWithoutStudentsInput>;
-  connect?: Maybe<ClassroomWhereUniqueInput>;
-}
-
-export interface ClassroomCreateWithoutStudentsInput {
+export interface ClassroomCreateWithoutSchoolInput {
   id?: Maybe<ID_Input>;
   name: String;
   level: ClassLevelCreateOneWithoutClassRoomsInput;
-  school: SchoolCreateOneInput;
+  capacity: String;
   classTeacher?: Maybe<UserCreateOneInput>;
-  subjects?: Maybe<SubjectCreateManyWithoutClassInput>;
+  students?: Maybe<StudentCreateManyWithoutClassInput>;
+  subjects?: Maybe<ClassSubjectCreateManyWithoutClassInput>;
 }
 
 export interface ClassLevelCreateOneWithoutClassRoomsInput {
@@ -1205,7 +1371,25 @@ export interface ClassLevelCreateWithoutClassRoomsInput {
   id?: Maybe<ID_Input>;
   levelName: String;
   description?: Maybe<String>;
-  school: SchoolCreateOneWithoutClassLevelsInput;
+  school?: Maybe<SchoolCreateOneWithoutClassLevelsInput>;
+}
+
+export interface UserCreateOneInput {
+  create?: Maybe<UserCreateInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  firstName: String;
+  middleName?: Maybe<String>;
+  lastName: String;
+  email?: Maybe<String>;
+  school?: Maybe<SchoolCreateOneInput>;
+  phone?: Maybe<String>;
+  password: String;
+  gender?: Maybe<Gender>;
+  role?: Maybe<Role>;
 }
 
 export interface SchoolCreateOneInput {
@@ -1221,6 +1405,76 @@ export interface SchoolCreateInput {
   email?: Maybe<String>;
   phone: String;
   schoolCode: String;
+  classes?: Maybe<ClassroomCreateManyWithoutSchoolInput>;
+  subjects?: Maybe<SubjectCreateManyWithoutSchoolInput>;
+  imageUrl?: Maybe<String>;
+  level?: Maybe<Level>;
+  students?: Maybe<StudentCreateManyWithoutSchoolInput>;
+  classLevels?: Maybe<ClassLevelCreateManyWithoutSchoolInput>;
+}
+
+export interface SubjectCreateManyWithoutSchoolInput {
+  create?: Maybe<
+    SubjectCreateWithoutSchoolInput[] | SubjectCreateWithoutSchoolInput
+  >;
+  connect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+}
+
+export interface SubjectCreateWithoutSchoolInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+}
+
+export interface StudentCreateManyWithoutSchoolInput {
+  create?: Maybe<
+    StudentCreateWithoutSchoolInput[] | StudentCreateWithoutSchoolInput
+  >;
+  connect?: Maybe<StudentWhereUniqueInput[] | StudentWhereUniqueInput>;
+}
+
+export interface StudentCreateWithoutSchoolInput {
+  id?: Maybe<ID_Input>;
+  firstName: String;
+  middleName?: Maybe<String>;
+  lastName: String;
+  admNo: String;
+  domitory?: Maybe<String>;
+  class?: Maybe<ClassroomCreateOneWithoutStudentsInput>;
+  feeBalance?: Maybe<String>;
+  subjects?: Maybe<ClassSubjectCreateManyInput>;
+  gender?: Maybe<Gender>;
+  prefect?: Maybe<Prefect>;
+}
+
+export interface ClassroomCreateOneWithoutStudentsInput {
+  create?: Maybe<ClassroomCreateWithoutStudentsInput>;
+  connect?: Maybe<ClassroomWhereUniqueInput>;
+}
+
+export interface ClassroomCreateWithoutStudentsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  level: ClassLevelCreateOneWithoutClassRoomsInput;
+  school?: Maybe<SchoolCreateOneWithoutClassesInput>;
+  capacity: String;
+  classTeacher?: Maybe<UserCreateOneInput>;
+  subjects?: Maybe<ClassSubjectCreateManyWithoutClassInput>;
+}
+
+export interface SchoolCreateOneWithoutClassesInput {
+  create?: Maybe<SchoolCreateWithoutClassesInput>;
+  connect?: Maybe<SchoolWhereUniqueInput>;
+}
+
+export interface SchoolCreateWithoutClassesInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  region?: Maybe<RegionCreateOneInput>;
+  address?: Maybe<String>;
+  email?: Maybe<String>;
+  phone: String;
+  schoolCode: String;
+  subjects?: Maybe<SubjectCreateManyWithoutSchoolInput>;
   imageUrl?: Maybe<String>;
   level?: Maybe<Level>;
   students?: Maybe<StudentCreateManyWithoutSchoolInput>;
@@ -1251,25 +1505,11 @@ export interface ClassroomCreateManyWithoutLevelInput {
 export interface ClassroomCreateWithoutLevelInput {
   id?: Maybe<ID_Input>;
   name: String;
-  school: SchoolCreateOneInput;
+  school?: Maybe<SchoolCreateOneWithoutClassesInput>;
+  capacity: String;
   classTeacher?: Maybe<UserCreateOneInput>;
   students?: Maybe<StudentCreateManyWithoutClassInput>;
-  subjects?: Maybe<SubjectCreateManyWithoutClassInput>;
-}
-
-export interface UserCreateOneInput {
-  create?: Maybe<UserCreateInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  username: String;
-  email?: Maybe<String>;
-  school?: Maybe<SchoolCreateOneInput>;
-  phone?: Maybe<String>;
-  password: String;
-  role?: Maybe<Role>;
+  subjects?: Maybe<ClassSubjectCreateManyWithoutClassInput>;
 }
 
 export interface StudentCreateManyWithoutClassInput {
@@ -1281,24 +1521,61 @@ export interface StudentCreateManyWithoutClassInput {
 
 export interface StudentCreateWithoutClassInput {
   id?: Maybe<ID_Input>;
-  name: String;
+  firstName: String;
+  middleName?: Maybe<String>;
+  lastName: String;
   admNo: String;
   domitory?: Maybe<String>;
   feeBalance?: Maybe<String>;
-  subjects?: Maybe<SubjectCreateManyInput>;
+  subjects?: Maybe<ClassSubjectCreateManyInput>;
+  gender?: Maybe<Gender>;
   school: SchoolCreateOneWithoutStudentsInput;
+  prefect?: Maybe<Prefect>;
 }
 
-export interface SubjectCreateManyInput {
-  create?: Maybe<SubjectCreateInput[] | SubjectCreateInput>;
-  connect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+export interface ClassSubjectCreateManyInput {
+  create?: Maybe<ClassSubjectCreateInput[] | ClassSubjectCreateInput>;
+  connect?: Maybe<
+    ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput
+  >;
+}
+
+export interface ClassSubjectCreateInput {
+  id?: Maybe<ID_Input>;
+  subject: SubjectCreateOneInput;
+  assignee?: Maybe<UserCreateOneInput>;
+  class: ClassroomCreateOneWithoutSubjectsInput;
+}
+
+export interface SubjectCreateOneInput {
+  create?: Maybe<SubjectCreateInput>;
+  connect?: Maybe<SubjectWhereUniqueInput>;
 }
 
 export interface SubjectCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
-  assignee?: Maybe<UserCreateOneInput>;
-  class: ClassroomCreateOneWithoutSubjectsInput;
+  school: SchoolCreateOneWithoutSubjectsInput;
+}
+
+export interface SchoolCreateOneWithoutSubjectsInput {
+  create?: Maybe<SchoolCreateWithoutSubjectsInput>;
+  connect?: Maybe<SchoolWhereUniqueInput>;
+}
+
+export interface SchoolCreateWithoutSubjectsInput {
+  id?: Maybe<ID_Input>;
+  name: String;
+  region?: Maybe<RegionCreateOneInput>;
+  address?: Maybe<String>;
+  email?: Maybe<String>;
+  phone: String;
+  schoolCode: String;
+  classes?: Maybe<ClassroomCreateManyWithoutSchoolInput>;
+  imageUrl?: Maybe<String>;
+  level?: Maybe<Level>;
+  students?: Maybe<StudentCreateManyWithoutSchoolInput>;
+  classLevels?: Maybe<ClassLevelCreateManyWithoutSchoolInput>;
 }
 
 export interface ClassroomCreateOneWithoutSubjectsInput {
@@ -1310,7 +1587,8 @@ export interface ClassroomCreateWithoutSubjectsInput {
   id?: Maybe<ID_Input>;
   name: String;
   level: ClassLevelCreateOneWithoutClassRoomsInput;
-  school: SchoolCreateOneInput;
+  school?: Maybe<SchoolCreateOneWithoutClassesInput>;
+  capacity: String;
   classTeacher?: Maybe<UserCreateOneInput>;
   students?: Maybe<StudentCreateManyWithoutClassInput>;
 }
@@ -1328,35 +1606,41 @@ export interface SchoolCreateWithoutStudentsInput {
   email?: Maybe<String>;
   phone: String;
   schoolCode: String;
+  classes?: Maybe<ClassroomCreateManyWithoutSchoolInput>;
+  subjects?: Maybe<SubjectCreateManyWithoutSchoolInput>;
   imageUrl?: Maybe<String>;
   level?: Maybe<Level>;
   classLevels?: Maybe<ClassLevelCreateManyWithoutSchoolInput>;
 }
 
-export interface SubjectCreateManyWithoutClassInput {
+export interface ClassSubjectCreateManyWithoutClassInput {
   create?: Maybe<
-    SubjectCreateWithoutClassInput[] | SubjectCreateWithoutClassInput
+    ClassSubjectCreateWithoutClassInput[] | ClassSubjectCreateWithoutClassInput
   >;
-  connect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+  connect?: Maybe<
+    ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput
+  >;
 }
 
-export interface SubjectCreateWithoutClassInput {
+export interface ClassSubjectCreateWithoutClassInput {
   id?: Maybe<ID_Input>;
-  name: String;
+  subject: SubjectCreateOneInput;
   assignee?: Maybe<UserCreateOneInput>;
 }
 
 export interface ClassLevelUpdateInput {
   levelName?: Maybe<String>;
   description?: Maybe<String>;
-  school?: Maybe<SchoolUpdateOneRequiredWithoutClassLevelsInput>;
+  school?: Maybe<SchoolUpdateOneWithoutClassLevelsInput>;
   classRooms?: Maybe<ClassroomUpdateManyWithoutLevelInput>;
 }
 
-export interface SchoolUpdateOneRequiredWithoutClassLevelsInput {
+export interface SchoolUpdateOneWithoutClassLevelsInput {
   create?: Maybe<SchoolCreateWithoutClassLevelsInput>;
   update?: Maybe<SchoolUpdateWithoutClassLevelsDataInput>;
   upsert?: Maybe<SchoolUpsertWithoutClassLevelsInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
   connect?: Maybe<SchoolWhereUniqueInput>;
 }
 
@@ -1367,6 +1651,8 @@ export interface SchoolUpdateWithoutClassLevelsDataInput {
   email?: Maybe<String>;
   phone?: Maybe<String>;
   schoolCode?: Maybe<String>;
+  classes?: Maybe<ClassroomUpdateManyWithoutSchoolInput>;
+  subjects?: Maybe<SubjectUpdateManyWithoutSchoolInput>;
   imageUrl?: Maybe<String>;
   level?: Maybe<Level>;
   students?: Maybe<StudentUpdateManyWithoutSchoolInput>;
@@ -1409,6 +1695,203 @@ export interface RegionUpsertNestedInput {
   create: RegionCreateInput;
 }
 
+export interface ClassroomUpdateManyWithoutSchoolInput {
+  create?: Maybe<
+    ClassroomCreateWithoutSchoolInput[] | ClassroomCreateWithoutSchoolInput
+  >;
+  delete?: Maybe<ClassroomWhereUniqueInput[] | ClassroomWhereUniqueInput>;
+  connect?: Maybe<ClassroomWhereUniqueInput[] | ClassroomWhereUniqueInput>;
+  set?: Maybe<ClassroomWhereUniqueInput[] | ClassroomWhereUniqueInput>;
+  disconnect?: Maybe<ClassroomWhereUniqueInput[] | ClassroomWhereUniqueInput>;
+  update?: Maybe<
+    | ClassroomUpdateWithWhereUniqueWithoutSchoolInput[]
+    | ClassroomUpdateWithWhereUniqueWithoutSchoolInput
+  >;
+  upsert?: Maybe<
+    | ClassroomUpsertWithWhereUniqueWithoutSchoolInput[]
+    | ClassroomUpsertWithWhereUniqueWithoutSchoolInput
+  >;
+  deleteMany?: Maybe<ClassroomScalarWhereInput[] | ClassroomScalarWhereInput>;
+  updateMany?: Maybe<
+    | ClassroomUpdateManyWithWhereNestedInput[]
+    | ClassroomUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface ClassroomUpdateWithWhereUniqueWithoutSchoolInput {
+  where: ClassroomWhereUniqueInput;
+  data: ClassroomUpdateWithoutSchoolDataInput;
+}
+
+export interface ClassroomUpdateWithoutSchoolDataInput {
+  name?: Maybe<String>;
+  level?: Maybe<ClassLevelUpdateOneRequiredWithoutClassRoomsInput>;
+  capacity?: Maybe<String>;
+  classTeacher?: Maybe<UserUpdateOneInput>;
+  students?: Maybe<StudentUpdateManyWithoutClassInput>;
+  subjects?: Maybe<ClassSubjectUpdateManyWithoutClassInput>;
+}
+
+export interface ClassLevelUpdateOneRequiredWithoutClassRoomsInput {
+  create?: Maybe<ClassLevelCreateWithoutClassRoomsInput>;
+  update?: Maybe<ClassLevelUpdateWithoutClassRoomsDataInput>;
+  upsert?: Maybe<ClassLevelUpsertWithoutClassRoomsInput>;
+  connect?: Maybe<ClassLevelWhereUniqueInput>;
+}
+
+export interface ClassLevelUpdateWithoutClassRoomsDataInput {
+  levelName?: Maybe<String>;
+  description?: Maybe<String>;
+  school?: Maybe<SchoolUpdateOneWithoutClassLevelsInput>;
+}
+
+export interface ClassLevelUpsertWithoutClassRoomsInput {
+  update: ClassLevelUpdateWithoutClassRoomsDataInput;
+  create: ClassLevelCreateWithoutClassRoomsInput;
+}
+
+export interface UserUpdateOneInput {
+  create?: Maybe<UserCreateInput>;
+  update?: Maybe<UserUpdateDataInput>;
+  upsert?: Maybe<UserUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserUpdateDataInput {
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
+  email?: Maybe<String>;
+  school?: Maybe<SchoolUpdateOneInput>;
+  phone?: Maybe<String>;
+  password?: Maybe<String>;
+  gender?: Maybe<Gender>;
+  role?: Maybe<Role>;
+}
+
+export interface SchoolUpdateOneInput {
+  create?: Maybe<SchoolCreateInput>;
+  update?: Maybe<SchoolUpdateDataInput>;
+  upsert?: Maybe<SchoolUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<SchoolWhereUniqueInput>;
+}
+
+export interface SchoolUpdateDataInput {
+  name?: Maybe<String>;
+  region?: Maybe<RegionUpdateOneInput>;
+  address?: Maybe<String>;
+  email?: Maybe<String>;
+  phone?: Maybe<String>;
+  schoolCode?: Maybe<String>;
+  classes?: Maybe<ClassroomUpdateManyWithoutSchoolInput>;
+  subjects?: Maybe<SubjectUpdateManyWithoutSchoolInput>;
+  imageUrl?: Maybe<String>;
+  level?: Maybe<Level>;
+  students?: Maybe<StudentUpdateManyWithoutSchoolInput>;
+  classLevels?: Maybe<ClassLevelUpdateManyWithoutSchoolInput>;
+}
+
+export interface SubjectUpdateManyWithoutSchoolInput {
+  create?: Maybe<
+    SubjectCreateWithoutSchoolInput[] | SubjectCreateWithoutSchoolInput
+  >;
+  delete?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+  connect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+  set?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+  disconnect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+  update?: Maybe<
+    | SubjectUpdateWithWhereUniqueWithoutSchoolInput[]
+    | SubjectUpdateWithWhereUniqueWithoutSchoolInput
+  >;
+  upsert?: Maybe<
+    | SubjectUpsertWithWhereUniqueWithoutSchoolInput[]
+    | SubjectUpsertWithWhereUniqueWithoutSchoolInput
+  >;
+  deleteMany?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
+  updateMany?: Maybe<
+    | SubjectUpdateManyWithWhereNestedInput[]
+    | SubjectUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface SubjectUpdateWithWhereUniqueWithoutSchoolInput {
+  where: SubjectWhereUniqueInput;
+  data: SubjectUpdateWithoutSchoolDataInput;
+}
+
+export interface SubjectUpdateWithoutSchoolDataInput {
+  name?: Maybe<String>;
+}
+
+export interface SubjectUpsertWithWhereUniqueWithoutSchoolInput {
+  where: SubjectWhereUniqueInput;
+  update: SubjectUpdateWithoutSchoolDataInput;
+  create: SubjectCreateWithoutSchoolInput;
+}
+
+export interface SubjectScalarWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  name?: Maybe<String>;
+  name_not?: Maybe<String>;
+  name_in?: Maybe<String[] | String>;
+  name_not_in?: Maybe<String[] | String>;
+  name_lt?: Maybe<String>;
+  name_lte?: Maybe<String>;
+  name_gt?: Maybe<String>;
+  name_gte?: Maybe<String>;
+  name_contains?: Maybe<String>;
+  name_not_contains?: Maybe<String>;
+  name_starts_with?: Maybe<String>;
+  name_not_starts_with?: Maybe<String>;
+  name_ends_with?: Maybe<String>;
+  name_not_ends_with?: Maybe<String>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
+  OR?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
+  NOT?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
+}
+
+export interface SubjectUpdateManyWithWhereNestedInput {
+  where: SubjectScalarWhereInput;
+  data: SubjectUpdateManyDataInput;
+}
+
+export interface SubjectUpdateManyDataInput {
+  name?: Maybe<String>;
+}
+
 export interface StudentUpdateManyWithoutSchoolInput {
   create?: Maybe<
     StudentCreateWithoutSchoolInput[] | StudentCreateWithoutSchoolInput
@@ -1438,12 +1921,16 @@ export interface StudentUpdateWithWhereUniqueWithoutSchoolInput {
 }
 
 export interface StudentUpdateWithoutSchoolDataInput {
-  name?: Maybe<String>;
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
   admNo?: Maybe<String>;
   domitory?: Maybe<String>;
   class?: Maybe<ClassroomUpdateOneWithoutStudentsInput>;
   feeBalance?: Maybe<String>;
-  subjects?: Maybe<SubjectUpdateManyInput>;
+  subjects?: Maybe<ClassSubjectUpdateManyInput>;
+  gender?: Maybe<Gender>;
+  prefect?: Maybe<Prefect>;
 }
 
 export interface ClassroomUpdateOneWithoutStudentsInput {
@@ -1458,43 +1945,29 @@ export interface ClassroomUpdateOneWithoutStudentsInput {
 export interface ClassroomUpdateWithoutStudentsDataInput {
   name?: Maybe<String>;
   level?: Maybe<ClassLevelUpdateOneRequiredWithoutClassRoomsInput>;
-  school?: Maybe<SchoolUpdateOneRequiredInput>;
+  school?: Maybe<SchoolUpdateOneWithoutClassesInput>;
+  capacity?: Maybe<String>;
   classTeacher?: Maybe<UserUpdateOneInput>;
-  subjects?: Maybe<SubjectUpdateManyWithoutClassInput>;
+  subjects?: Maybe<ClassSubjectUpdateManyWithoutClassInput>;
 }
 
-export interface ClassLevelUpdateOneRequiredWithoutClassRoomsInput {
-  create?: Maybe<ClassLevelCreateWithoutClassRoomsInput>;
-  update?: Maybe<ClassLevelUpdateWithoutClassRoomsDataInput>;
-  upsert?: Maybe<ClassLevelUpsertWithoutClassRoomsInput>;
-  connect?: Maybe<ClassLevelWhereUniqueInput>;
-}
-
-export interface ClassLevelUpdateWithoutClassRoomsDataInput {
-  levelName?: Maybe<String>;
-  description?: Maybe<String>;
-  school?: Maybe<SchoolUpdateOneRequiredWithoutClassLevelsInput>;
-}
-
-export interface ClassLevelUpsertWithoutClassRoomsInput {
-  update: ClassLevelUpdateWithoutClassRoomsDataInput;
-  create: ClassLevelCreateWithoutClassRoomsInput;
-}
-
-export interface SchoolUpdateOneRequiredInput {
-  create?: Maybe<SchoolCreateInput>;
-  update?: Maybe<SchoolUpdateDataInput>;
-  upsert?: Maybe<SchoolUpsertNestedInput>;
+export interface SchoolUpdateOneWithoutClassesInput {
+  create?: Maybe<SchoolCreateWithoutClassesInput>;
+  update?: Maybe<SchoolUpdateWithoutClassesDataInput>;
+  upsert?: Maybe<SchoolUpsertWithoutClassesInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
   connect?: Maybe<SchoolWhereUniqueInput>;
 }
 
-export interface SchoolUpdateDataInput {
+export interface SchoolUpdateWithoutClassesDataInput {
   name?: Maybe<String>;
   region?: Maybe<RegionUpdateOneInput>;
   address?: Maybe<String>;
   email?: Maybe<String>;
   phone?: Maybe<String>;
   schoolCode?: Maybe<String>;
+  subjects?: Maybe<SubjectUpdateManyWithoutSchoolInput>;
   imageUrl?: Maybe<String>;
   level?: Maybe<Level>;
   students?: Maybe<StudentUpdateManyWithoutSchoolInput>;
@@ -1565,47 +2038,11 @@ export interface ClassroomUpdateWithWhereUniqueWithoutLevelInput {
 
 export interface ClassroomUpdateWithoutLevelDataInput {
   name?: Maybe<String>;
-  school?: Maybe<SchoolUpdateOneRequiredInput>;
+  school?: Maybe<SchoolUpdateOneWithoutClassesInput>;
+  capacity?: Maybe<String>;
   classTeacher?: Maybe<UserUpdateOneInput>;
   students?: Maybe<StudentUpdateManyWithoutClassInput>;
-  subjects?: Maybe<SubjectUpdateManyWithoutClassInput>;
-}
-
-export interface UserUpdateOneInput {
-  create?: Maybe<UserCreateInput>;
-  update?: Maybe<UserUpdateDataInput>;
-  upsert?: Maybe<UserUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserUpdateDataInput {
-  username?: Maybe<String>;
-  email?: Maybe<String>;
-  school?: Maybe<SchoolUpdateOneInput>;
-  phone?: Maybe<String>;
-  password?: Maybe<String>;
-  role?: Maybe<Role>;
-}
-
-export interface SchoolUpdateOneInput {
-  create?: Maybe<SchoolCreateInput>;
-  update?: Maybe<SchoolUpdateDataInput>;
-  upsert?: Maybe<SchoolUpsertNestedInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<SchoolWhereUniqueInput>;
-}
-
-export interface SchoolUpsertNestedInput {
-  update: SchoolUpdateDataInput;
-  create: SchoolCreateInput;
-}
-
-export interface UserUpsertNestedInput {
-  update: UserUpdateDataInput;
-  create: UserCreateInput;
+  subjects?: Maybe<ClassSubjectUpdateManyWithoutClassInput>;
 }
 
 export interface StudentUpdateManyWithoutClassInput {
@@ -1637,44 +2074,93 @@ export interface StudentUpdateWithWhereUniqueWithoutClassInput {
 }
 
 export interface StudentUpdateWithoutClassDataInput {
-  name?: Maybe<String>;
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
   admNo?: Maybe<String>;
   domitory?: Maybe<String>;
   feeBalance?: Maybe<String>;
-  subjects?: Maybe<SubjectUpdateManyInput>;
+  subjects?: Maybe<ClassSubjectUpdateManyInput>;
+  gender?: Maybe<Gender>;
   school?: Maybe<SchoolUpdateOneRequiredWithoutStudentsInput>;
+  prefect?: Maybe<Prefect>;
 }
 
-export interface SubjectUpdateManyInput {
-  create?: Maybe<SubjectCreateInput[] | SubjectCreateInput>;
+export interface ClassSubjectUpdateManyInput {
+  create?: Maybe<ClassSubjectCreateInput[] | ClassSubjectCreateInput>;
   update?: Maybe<
-    | SubjectUpdateWithWhereUniqueNestedInput[]
-    | SubjectUpdateWithWhereUniqueNestedInput
+    | ClassSubjectUpdateWithWhereUniqueNestedInput[]
+    | ClassSubjectUpdateWithWhereUniqueNestedInput
   >;
   upsert?: Maybe<
-    | SubjectUpsertWithWhereUniqueNestedInput[]
-    | SubjectUpsertWithWhereUniqueNestedInput
+    | ClassSubjectUpsertWithWhereUniqueNestedInput[]
+    | ClassSubjectUpsertWithWhereUniqueNestedInput
   >;
-  delete?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
-  connect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
-  set?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
-  disconnect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
-  deleteMany?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
-  updateMany?: Maybe<
-    | SubjectUpdateManyWithWhereNestedInput[]
-    | SubjectUpdateManyWithWhereNestedInput
+  delete?: Maybe<ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput>;
+  connect?: Maybe<
+    ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput
+  >;
+  set?: Maybe<ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput>;
+  disconnect?: Maybe<
+    ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput
+  >;
+  deleteMany?: Maybe<
+    ClassSubjectScalarWhereInput[] | ClassSubjectScalarWhereInput
   >;
 }
 
-export interface SubjectUpdateWithWhereUniqueNestedInput {
-  where: SubjectWhereUniqueInput;
-  data: SubjectUpdateDataInput;
+export interface ClassSubjectUpdateWithWhereUniqueNestedInput {
+  where: ClassSubjectWhereUniqueInput;
+  data: ClassSubjectUpdateDataInput;
+}
+
+export interface ClassSubjectUpdateDataInput {
+  subject?: Maybe<SubjectUpdateOneRequiredInput>;
+  assignee?: Maybe<UserUpdateOneInput>;
+  class?: Maybe<ClassroomUpdateOneRequiredWithoutSubjectsInput>;
+}
+
+export interface SubjectUpdateOneRequiredInput {
+  create?: Maybe<SubjectCreateInput>;
+  update?: Maybe<SubjectUpdateDataInput>;
+  upsert?: Maybe<SubjectUpsertNestedInput>;
+  connect?: Maybe<SubjectWhereUniqueInput>;
 }
 
 export interface SubjectUpdateDataInput {
   name?: Maybe<String>;
-  assignee?: Maybe<UserUpdateOneInput>;
-  class?: Maybe<ClassroomUpdateOneRequiredWithoutSubjectsInput>;
+  school?: Maybe<SchoolUpdateOneRequiredWithoutSubjectsInput>;
+}
+
+export interface SchoolUpdateOneRequiredWithoutSubjectsInput {
+  create?: Maybe<SchoolCreateWithoutSubjectsInput>;
+  update?: Maybe<SchoolUpdateWithoutSubjectsDataInput>;
+  upsert?: Maybe<SchoolUpsertWithoutSubjectsInput>;
+  connect?: Maybe<SchoolWhereUniqueInput>;
+}
+
+export interface SchoolUpdateWithoutSubjectsDataInput {
+  name?: Maybe<String>;
+  region?: Maybe<RegionUpdateOneInput>;
+  address?: Maybe<String>;
+  email?: Maybe<String>;
+  phone?: Maybe<String>;
+  schoolCode?: Maybe<String>;
+  classes?: Maybe<ClassroomUpdateManyWithoutSchoolInput>;
+  imageUrl?: Maybe<String>;
+  level?: Maybe<Level>;
+  students?: Maybe<StudentUpdateManyWithoutSchoolInput>;
+  classLevels?: Maybe<ClassLevelUpdateManyWithoutSchoolInput>;
+}
+
+export interface SchoolUpsertWithoutSubjectsInput {
+  update: SchoolUpdateWithoutSubjectsDataInput;
+  create: SchoolCreateWithoutSubjectsInput;
+}
+
+export interface SubjectUpsertNestedInput {
+  update: SubjectUpdateDataInput;
+  create: SubjectCreateInput;
 }
 
 export interface ClassroomUpdateOneRequiredWithoutSubjectsInput {
@@ -1687,7 +2173,8 @@ export interface ClassroomUpdateOneRequiredWithoutSubjectsInput {
 export interface ClassroomUpdateWithoutSubjectsDataInput {
   name?: Maybe<String>;
   level?: Maybe<ClassLevelUpdateOneRequiredWithoutClassRoomsInput>;
-  school?: Maybe<SchoolUpdateOneRequiredInput>;
+  school?: Maybe<SchoolUpdateOneWithoutClassesInput>;
+  capacity?: Maybe<String>;
   classTeacher?: Maybe<UserUpdateOneInput>;
   students?: Maybe<StudentUpdateManyWithoutClassInput>;
 }
@@ -1697,13 +2184,13 @@ export interface ClassroomUpsertWithoutSubjectsInput {
   create: ClassroomCreateWithoutSubjectsInput;
 }
 
-export interface SubjectUpsertWithWhereUniqueNestedInput {
-  where: SubjectWhereUniqueInput;
-  update: SubjectUpdateDataInput;
-  create: SubjectCreateInput;
+export interface ClassSubjectUpsertWithWhereUniqueNestedInput {
+  where: ClassSubjectWhereUniqueInput;
+  update: ClassSubjectUpdateDataInput;
+  create: ClassSubjectCreateInput;
 }
 
-export interface SubjectScalarWhereInput {
+export interface ClassSubjectScalarWhereInput {
   id?: Maybe<ID_Input>;
   id_not?: Maybe<ID_Input>;
   id_in?: Maybe<ID_Input[] | ID_Input>;
@@ -1718,48 +2205,9 @@ export interface SubjectScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
-  OR?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
-  NOT?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
-}
-
-export interface SubjectUpdateManyWithWhereNestedInput {
-  where: SubjectScalarWhereInput;
-  data: SubjectUpdateManyDataInput;
-}
-
-export interface SubjectUpdateManyDataInput {
-  name?: Maybe<String>;
+  AND?: Maybe<ClassSubjectScalarWhereInput[] | ClassSubjectScalarWhereInput>;
+  OR?: Maybe<ClassSubjectScalarWhereInput[] | ClassSubjectScalarWhereInput>;
+  NOT?: Maybe<ClassSubjectScalarWhereInput[] | ClassSubjectScalarWhereInput>;
 }
 
 export interface SchoolUpdateOneRequiredWithoutStudentsInput {
@@ -1776,6 +2224,8 @@ export interface SchoolUpdateWithoutStudentsDataInput {
   email?: Maybe<String>;
   phone?: Maybe<String>;
   schoolCode?: Maybe<String>;
+  classes?: Maybe<ClassroomUpdateManyWithoutSchoolInput>;
+  subjects?: Maybe<SubjectUpdateManyWithoutSchoolInput>;
   imageUrl?: Maybe<String>;
   level?: Maybe<Level>;
   classLevels?: Maybe<ClassLevelUpdateManyWithoutSchoolInput>;
@@ -1807,20 +2257,48 @@ export interface StudentScalarWhereInput {
   id_not_starts_with?: Maybe<ID_Input>;
   id_ends_with?: Maybe<ID_Input>;
   id_not_ends_with?: Maybe<ID_Input>;
-  name?: Maybe<String>;
-  name_not?: Maybe<String>;
-  name_in?: Maybe<String[] | String>;
-  name_not_in?: Maybe<String[] | String>;
-  name_lt?: Maybe<String>;
-  name_lte?: Maybe<String>;
-  name_gt?: Maybe<String>;
-  name_gte?: Maybe<String>;
-  name_contains?: Maybe<String>;
-  name_not_contains?: Maybe<String>;
-  name_starts_with?: Maybe<String>;
-  name_not_starts_with?: Maybe<String>;
-  name_ends_with?: Maybe<String>;
-  name_not_ends_with?: Maybe<String>;
+  firstName?: Maybe<String>;
+  firstName_not?: Maybe<String>;
+  firstName_in?: Maybe<String[] | String>;
+  firstName_not_in?: Maybe<String[] | String>;
+  firstName_lt?: Maybe<String>;
+  firstName_lte?: Maybe<String>;
+  firstName_gt?: Maybe<String>;
+  firstName_gte?: Maybe<String>;
+  firstName_contains?: Maybe<String>;
+  firstName_not_contains?: Maybe<String>;
+  firstName_starts_with?: Maybe<String>;
+  firstName_not_starts_with?: Maybe<String>;
+  firstName_ends_with?: Maybe<String>;
+  firstName_not_ends_with?: Maybe<String>;
+  middleName?: Maybe<String>;
+  middleName_not?: Maybe<String>;
+  middleName_in?: Maybe<String[] | String>;
+  middleName_not_in?: Maybe<String[] | String>;
+  middleName_lt?: Maybe<String>;
+  middleName_lte?: Maybe<String>;
+  middleName_gt?: Maybe<String>;
+  middleName_gte?: Maybe<String>;
+  middleName_contains?: Maybe<String>;
+  middleName_not_contains?: Maybe<String>;
+  middleName_starts_with?: Maybe<String>;
+  middleName_not_starts_with?: Maybe<String>;
+  middleName_ends_with?: Maybe<String>;
+  middleName_not_ends_with?: Maybe<String>;
+  lastName?: Maybe<String>;
+  lastName_not?: Maybe<String>;
+  lastName_in?: Maybe<String[] | String>;
+  lastName_not_in?: Maybe<String[] | String>;
+  lastName_lt?: Maybe<String>;
+  lastName_lte?: Maybe<String>;
+  lastName_gt?: Maybe<String>;
+  lastName_gte?: Maybe<String>;
+  lastName_contains?: Maybe<String>;
+  lastName_not_contains?: Maybe<String>;
+  lastName_starts_with?: Maybe<String>;
+  lastName_not_starts_with?: Maybe<String>;
+  lastName_ends_with?: Maybe<String>;
+  lastName_not_ends_with?: Maybe<String>;
   admNo?: Maybe<String>;
   admNo_not?: Maybe<String>;
   admNo_in?: Maybe<String[] | String>;
@@ -1863,6 +2341,14 @@ export interface StudentScalarWhereInput {
   feeBalance_not_starts_with?: Maybe<String>;
   feeBalance_ends_with?: Maybe<String>;
   feeBalance_not_ends_with?: Maybe<String>;
+  gender?: Maybe<Gender>;
+  gender_not?: Maybe<Gender>;
+  gender_in?: Maybe<Gender[] | Gender>;
+  gender_not_in?: Maybe<Gender[] | Gender>;
+  prefect?: Maybe<Prefect>;
+  prefect_not?: Maybe<Prefect>;
+  prefect_in?: Maybe<Prefect[] | Prefect>;
+  prefect_not_in?: Maybe<Prefect[] | Prefect>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -1890,49 +2376,55 @@ export interface StudentUpdateManyWithWhereNestedInput {
 }
 
 export interface StudentUpdateManyDataInput {
-  name?: Maybe<String>;
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
   admNo?: Maybe<String>;
   domitory?: Maybe<String>;
   feeBalance?: Maybe<String>;
+  gender?: Maybe<Gender>;
+  prefect?: Maybe<Prefect>;
 }
 
-export interface SubjectUpdateManyWithoutClassInput {
+export interface ClassSubjectUpdateManyWithoutClassInput {
   create?: Maybe<
-    SubjectCreateWithoutClassInput[] | SubjectCreateWithoutClassInput
+    ClassSubjectCreateWithoutClassInput[] | ClassSubjectCreateWithoutClassInput
   >;
-  delete?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
-  connect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
-  set?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
-  disconnect?: Maybe<SubjectWhereUniqueInput[] | SubjectWhereUniqueInput>;
+  delete?: Maybe<ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput>;
+  connect?: Maybe<
+    ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput
+  >;
+  set?: Maybe<ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput>;
+  disconnect?: Maybe<
+    ClassSubjectWhereUniqueInput[] | ClassSubjectWhereUniqueInput
+  >;
   update?: Maybe<
-    | SubjectUpdateWithWhereUniqueWithoutClassInput[]
-    | SubjectUpdateWithWhereUniqueWithoutClassInput
+    | ClassSubjectUpdateWithWhereUniqueWithoutClassInput[]
+    | ClassSubjectUpdateWithWhereUniqueWithoutClassInput
   >;
   upsert?: Maybe<
-    | SubjectUpsertWithWhereUniqueWithoutClassInput[]
-    | SubjectUpsertWithWhereUniqueWithoutClassInput
+    | ClassSubjectUpsertWithWhereUniqueWithoutClassInput[]
+    | ClassSubjectUpsertWithWhereUniqueWithoutClassInput
   >;
-  deleteMany?: Maybe<SubjectScalarWhereInput[] | SubjectScalarWhereInput>;
-  updateMany?: Maybe<
-    | SubjectUpdateManyWithWhereNestedInput[]
-    | SubjectUpdateManyWithWhereNestedInput
+  deleteMany?: Maybe<
+    ClassSubjectScalarWhereInput[] | ClassSubjectScalarWhereInput
   >;
 }
 
-export interface SubjectUpdateWithWhereUniqueWithoutClassInput {
-  where: SubjectWhereUniqueInput;
-  data: SubjectUpdateWithoutClassDataInput;
+export interface ClassSubjectUpdateWithWhereUniqueWithoutClassInput {
+  where: ClassSubjectWhereUniqueInput;
+  data: ClassSubjectUpdateWithoutClassDataInput;
 }
 
-export interface SubjectUpdateWithoutClassDataInput {
-  name?: Maybe<String>;
+export interface ClassSubjectUpdateWithoutClassDataInput {
+  subject?: Maybe<SubjectUpdateOneRequiredInput>;
   assignee?: Maybe<UserUpdateOneInput>;
 }
 
-export interface SubjectUpsertWithWhereUniqueWithoutClassInput {
-  where: SubjectWhereUniqueInput;
-  update: SubjectUpdateWithoutClassDataInput;
-  create: SubjectCreateWithoutClassInput;
+export interface ClassSubjectUpsertWithWhereUniqueWithoutClassInput {
+  where: ClassSubjectWhereUniqueInput;
+  update: ClassSubjectUpdateWithoutClassDataInput;
+  create: ClassSubjectCreateWithoutClassInput;
 }
 
 export interface ClassroomUpsertWithWhereUniqueWithoutLevelInput {
@@ -1970,6 +2462,20 @@ export interface ClassroomScalarWhereInput {
   name_not_starts_with?: Maybe<String>;
   name_ends_with?: Maybe<String>;
   name_not_ends_with?: Maybe<String>;
+  capacity?: Maybe<String>;
+  capacity_not?: Maybe<String>;
+  capacity_in?: Maybe<String[] | String>;
+  capacity_not_in?: Maybe<String[] | String>;
+  capacity_lt?: Maybe<String>;
+  capacity_lte?: Maybe<String>;
+  capacity_gt?: Maybe<String>;
+  capacity_gte?: Maybe<String>;
+  capacity_contains?: Maybe<String>;
+  capacity_not_contains?: Maybe<String>;
+  capacity_starts_with?: Maybe<String>;
+  capacity_not_starts_with?: Maybe<String>;
+  capacity_ends_with?: Maybe<String>;
+  capacity_not_ends_with?: Maybe<String>;
   createdAt?: Maybe<DateTimeInput>;
   createdAt_not?: Maybe<DateTimeInput>;
   createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
@@ -1998,6 +2504,7 @@ export interface ClassroomUpdateManyWithWhereNestedInput {
 
 export interface ClassroomUpdateManyDataInput {
   name?: Maybe<String>;
+  capacity?: Maybe<String>;
 }
 
 export interface ClassLevelUpsertWithWhereUniqueWithoutSchoolInput {
@@ -2064,6 +2571,11 @@ export interface ClassLevelUpdateManyDataInput {
   description?: Maybe<String>;
 }
 
+export interface SchoolUpsertWithoutClassesInput {
+  update: SchoolUpdateWithoutClassesDataInput;
+  create: SchoolCreateWithoutClassesInput;
+}
+
 export interface ClassroomUpsertWithoutStudentsInput {
   update: ClassroomUpdateWithoutStudentsDataInput;
   create: ClassroomCreateWithoutStudentsInput;
@@ -2073,6 +2585,22 @@ export interface StudentUpsertWithWhereUniqueWithoutSchoolInput {
   where: StudentWhereUniqueInput;
   update: StudentUpdateWithoutSchoolDataInput;
   create: StudentCreateWithoutSchoolInput;
+}
+
+export interface SchoolUpsertNestedInput {
+  update: SchoolUpdateDataInput;
+  create: SchoolCreateInput;
+}
+
+export interface UserUpsertNestedInput {
+  update: UserUpdateDataInput;
+  create: UserCreateInput;
+}
+
+export interface ClassroomUpsertWithWhereUniqueWithoutSchoolInput {
+  where: ClassroomWhereUniqueInput;
+  update: ClassroomUpdateWithoutSchoolDataInput;
+  create: ClassroomCreateWithoutSchoolInput;
 }
 
 export interface SchoolUpsertWithoutClassLevelsInput {
@@ -2085,27 +2613,36 @@ export interface ClassLevelUpdateManyMutationInput {
   description?: Maybe<String>;
 }
 
+export interface ClassSubjectUpdateInput {
+  subject?: Maybe<SubjectUpdateOneRequiredInput>;
+  assignee?: Maybe<UserUpdateOneInput>;
+  class?: Maybe<ClassroomUpdateOneRequiredWithoutSubjectsInput>;
+}
+
 export interface ClassroomCreateInput {
   id?: Maybe<ID_Input>;
   name: String;
   level: ClassLevelCreateOneWithoutClassRoomsInput;
-  school: SchoolCreateOneInput;
+  school?: Maybe<SchoolCreateOneWithoutClassesInput>;
+  capacity: String;
   classTeacher?: Maybe<UserCreateOneInput>;
   students?: Maybe<StudentCreateManyWithoutClassInput>;
-  subjects?: Maybe<SubjectCreateManyWithoutClassInput>;
+  subjects?: Maybe<ClassSubjectCreateManyWithoutClassInput>;
 }
 
 export interface ClassroomUpdateInput {
   name?: Maybe<String>;
   level?: Maybe<ClassLevelUpdateOneRequiredWithoutClassRoomsInput>;
-  school?: Maybe<SchoolUpdateOneRequiredInput>;
+  school?: Maybe<SchoolUpdateOneWithoutClassesInput>;
+  capacity?: Maybe<String>;
   classTeacher?: Maybe<UserUpdateOneInput>;
   students?: Maybe<StudentUpdateManyWithoutClassInput>;
-  subjects?: Maybe<SubjectUpdateManyWithoutClassInput>;
+  subjects?: Maybe<ClassSubjectUpdateManyWithoutClassInput>;
 }
 
 export interface ClassroomUpdateManyMutationInput {
   name?: Maybe<String>;
+  capacity?: Maybe<String>;
 }
 
 export interface CountryUpdateInput {
@@ -2132,6 +2669,8 @@ export interface SchoolUpdateInput {
   email?: Maybe<String>;
   phone?: Maybe<String>;
   schoolCode?: Maybe<String>;
+  classes?: Maybe<ClassroomUpdateManyWithoutSchoolInput>;
+  subjects?: Maybe<SubjectUpdateManyWithoutSchoolInput>;
   imageUrl?: Maybe<String>;
   level?: Maybe<Level>;
   students?: Maybe<StudentUpdateManyWithoutSchoolInput>;
@@ -2150,36 +2689,47 @@ export interface SchoolUpdateManyMutationInput {
 
 export interface StudentCreateInput {
   id?: Maybe<ID_Input>;
-  name: String;
+  firstName: String;
+  middleName?: Maybe<String>;
+  lastName: String;
   admNo: String;
   domitory?: Maybe<String>;
   class?: Maybe<ClassroomCreateOneWithoutStudentsInput>;
   feeBalance?: Maybe<String>;
-  subjects?: Maybe<SubjectCreateManyInput>;
+  subjects?: Maybe<ClassSubjectCreateManyInput>;
+  gender?: Maybe<Gender>;
   school: SchoolCreateOneWithoutStudentsInput;
+  prefect?: Maybe<Prefect>;
 }
 
 export interface StudentUpdateInput {
-  name?: Maybe<String>;
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
   admNo?: Maybe<String>;
   domitory?: Maybe<String>;
   class?: Maybe<ClassroomUpdateOneWithoutStudentsInput>;
   feeBalance?: Maybe<String>;
-  subjects?: Maybe<SubjectUpdateManyInput>;
+  subjects?: Maybe<ClassSubjectUpdateManyInput>;
+  gender?: Maybe<Gender>;
   school?: Maybe<SchoolUpdateOneRequiredWithoutStudentsInput>;
+  prefect?: Maybe<Prefect>;
 }
 
 export interface StudentUpdateManyMutationInput {
-  name?: Maybe<String>;
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
   admNo?: Maybe<String>;
   domitory?: Maybe<String>;
   feeBalance?: Maybe<String>;
+  gender?: Maybe<Gender>;
+  prefect?: Maybe<Prefect>;
 }
 
 export interface SubjectUpdateInput {
   name?: Maybe<String>;
-  assignee?: Maybe<UserUpdateOneInput>;
-  class?: Maybe<ClassroomUpdateOneRequiredWithoutSubjectsInput>;
+  school?: Maybe<SchoolUpdateOneRequiredWithoutSubjectsInput>;
 }
 
 export interface SubjectUpdateManyMutationInput {
@@ -2187,19 +2737,25 @@ export interface SubjectUpdateManyMutationInput {
 }
 
 export interface UserUpdateInput {
-  username?: Maybe<String>;
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
   email?: Maybe<String>;
   school?: Maybe<SchoolUpdateOneInput>;
   phone?: Maybe<String>;
   password?: Maybe<String>;
+  gender?: Maybe<Gender>;
   role?: Maybe<Role>;
 }
 
 export interface UserUpdateManyMutationInput {
-  username?: Maybe<String>;
+  firstName?: Maybe<String>;
+  middleName?: Maybe<String>;
+  lastName?: Maybe<String>;
   email?: Maybe<String>;
   phone?: Maybe<String>;
   password?: Maybe<String>;
+  gender?: Maybe<Gender>;
   role?: Maybe<Role>;
 }
 
@@ -2217,6 +2773,23 @@ export interface ClassLevelSubscriptionWhereInput {
   >;
   NOT?: Maybe<
     ClassLevelSubscriptionWhereInput[] | ClassLevelSubscriptionWhereInput
+  >;
+}
+
+export interface ClassSubjectSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ClassSubjectWhereInput>;
+  AND?: Maybe<
+    ClassSubjectSubscriptionWhereInput[] | ClassSubjectSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    ClassSubjectSubscriptionWhereInput[] | ClassSubjectSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    ClassSubjectSubscriptionWhereInput[] | ClassSubjectSubscriptionWhereInput
   >;
 }
 
@@ -2373,7 +2946,7 @@ export interface School {
   phone: String;
   schoolCode: String;
   imageUrl?: String;
-  level: Level;
+  level?: Level;
   createdAt?: DateTimeOutput;
   updatedAt?: DateTimeOutput;
 }
@@ -2386,6 +2959,24 @@ export interface SchoolPromise extends Promise<School>, Fragmentable {
   email: () => Promise<String>;
   phone: () => Promise<String>;
   schoolCode: () => Promise<String>;
+  classes: <T = FragmentableArray<Classroom>>(args?: {
+    where?: ClassroomWhereInput;
+    orderBy?: ClassroomOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  subjects: <T = FragmentableArray<Subject>>(args?: {
+    where?: SubjectWhereInput;
+    orderBy?: SubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   imageUrl: () => Promise<String>;
   level: () => Promise<Level>;
   students: <T = FragmentableArray<Student>>(args?: {
@@ -2420,6 +3011,24 @@ export interface SchoolSubscription
   email: () => Promise<AsyncIterator<String>>;
   phone: () => Promise<AsyncIterator<String>>;
   schoolCode: () => Promise<AsyncIterator<String>>;
+  classes: <T = Promise<AsyncIterator<ClassroomSubscription>>>(args?: {
+    where?: ClassroomWhereInput;
+    orderBy?: ClassroomOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  subjects: <T = Promise<AsyncIterator<SubjectSubscription>>>(args?: {
+    where?: SubjectWhereInput;
+    orderBy?: SubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   imageUrl: () => Promise<AsyncIterator<String>>;
   level: () => Promise<AsyncIterator<Level>>;
   students: <T = Promise<AsyncIterator<StudentSubscription>>>(args?: {
@@ -2454,6 +3063,24 @@ export interface SchoolNullablePromise
   email: () => Promise<String>;
   phone: () => Promise<String>;
   schoolCode: () => Promise<String>;
+  classes: <T = FragmentableArray<Classroom>>(args?: {
+    where?: ClassroomWhereInput;
+    orderBy?: ClassroomOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  subjects: <T = FragmentableArray<Subject>>(args?: {
+    where?: SubjectWhereInput;
+    orderBy?: SubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   imageUrl: () => Promise<String>;
   level: () => Promise<Level>;
   students: <T = FragmentableArray<Student>>(args?: {
@@ -2545,86 +3172,10 @@ export interface CountryNullablePromise
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface Student {
-  id: ID_Output;
-  name: String;
-  admNo: String;
-  domitory?: String;
-  feeBalance?: String;
-  createdAt?: DateTimeOutput;
-  updatedAt?: DateTimeOutput;
-}
-
-export interface StudentPromise extends Promise<Student>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  admNo: () => Promise<String>;
-  domitory: () => Promise<String>;
-  class: <T = ClassroomPromise>() => T;
-  feeBalance: () => Promise<String>;
-  subjects: <T = FragmentableArray<Subject>>(args?: {
-    where?: SubjectWhereInput;
-    orderBy?: SubjectOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  school: <T = SchoolPromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface StudentSubscription
-  extends Promise<AsyncIterator<Student>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
-  admNo: () => Promise<AsyncIterator<String>>;
-  domitory: () => Promise<AsyncIterator<String>>;
-  class: <T = ClassroomSubscription>() => T;
-  feeBalance: () => Promise<AsyncIterator<String>>;
-  subjects: <T = Promise<AsyncIterator<SubjectSubscription>>>(args?: {
-    where?: SubjectWhereInput;
-    orderBy?: SubjectOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  school: <T = SchoolSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface StudentNullablePromise
-  extends Promise<Student | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
-  admNo: () => Promise<String>;
-  domitory: () => Promise<String>;
-  class: <T = ClassroomPromise>() => T;
-  feeBalance: () => Promise<String>;
-  subjects: <T = FragmentableArray<Subject>>(args?: {
-    where?: SubjectWhereInput;
-    orderBy?: SubjectOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  school: <T = SchoolPromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
 export interface Classroom {
   id: ID_Output;
   name: String;
+  capacity: String;
   createdAt?: DateTimeOutput;
   updatedAt?: DateTimeOutput;
 }
@@ -2634,6 +3185,7 @@ export interface ClassroomPromise extends Promise<Classroom>, Fragmentable {
   name: () => Promise<String>;
   level: <T = ClassLevelPromise>() => T;
   school: <T = SchoolPromise>() => T;
+  capacity: () => Promise<String>;
   classTeacher: <T = UserPromise>() => T;
   students: <T = FragmentableArray<Student>>(args?: {
     where?: StudentWhereInput;
@@ -2644,9 +3196,9 @@ export interface ClassroomPromise extends Promise<Classroom>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
-  subjects: <T = FragmentableArray<Subject>>(args?: {
-    where?: SubjectWhereInput;
-    orderBy?: SubjectOrderByInput;
+  subjects: <T = FragmentableArray<ClassSubject>>(args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -2664,6 +3216,7 @@ export interface ClassroomSubscription
   name: () => Promise<AsyncIterator<String>>;
   level: <T = ClassLevelSubscription>() => T;
   school: <T = SchoolSubscription>() => T;
+  capacity: () => Promise<AsyncIterator<String>>;
   classTeacher: <T = UserSubscription>() => T;
   students: <T = Promise<AsyncIterator<StudentSubscription>>>(args?: {
     where?: StudentWhereInput;
@@ -2674,9 +3227,9 @@ export interface ClassroomSubscription
     first?: Int;
     last?: Int;
   }) => T;
-  subjects: <T = Promise<AsyncIterator<SubjectSubscription>>>(args?: {
-    where?: SubjectWhereInput;
-    orderBy?: SubjectOrderByInput;
+  subjects: <T = Promise<AsyncIterator<ClassSubjectSubscription>>>(args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -2694,6 +3247,7 @@ export interface ClassroomNullablePromise
   name: () => Promise<String>;
   level: <T = ClassLevelPromise>() => T;
   school: <T = SchoolPromise>() => T;
+  capacity: () => Promise<String>;
   classTeacher: <T = UserPromise>() => T;
   students: <T = FragmentableArray<Student>>(args?: {
     where?: StudentWhereInput;
@@ -2704,9 +3258,9 @@ export interface ClassroomNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
-  subjects: <T = FragmentableArray<Subject>>(args?: {
-    where?: SubjectWhereInput;
-    orderBy?: SubjectOrderByInput;
+  subjects: <T = FragmentableArray<ClassSubject>>(args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
@@ -2719,10 +3273,13 @@ export interface ClassroomNullablePromise
 
 export interface User {
   id: ID_Output;
-  username: String;
+  firstName: String;
+  middleName?: String;
+  lastName: String;
   email?: String;
   phone?: String;
   password: String;
+  gender?: Gender;
   role: Role;
   createdAt?: DateTimeOutput;
   updatedAt?: DateTimeOutput;
@@ -2730,11 +3287,14 @@ export interface User {
 
 export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
+  firstName: () => Promise<String>;
+  middleName: () => Promise<String>;
+  lastName: () => Promise<String>;
   email: () => Promise<String>;
   school: <T = SchoolPromise>() => T;
   phone: () => Promise<String>;
   password: () => Promise<String>;
+  gender: () => Promise<Gender>;
   role: () => Promise<Role>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -2744,11 +3304,14 @@ export interface UserSubscription
   extends Promise<AsyncIterator<User>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  username: () => Promise<AsyncIterator<String>>;
+  firstName: () => Promise<AsyncIterator<String>>;
+  middleName: () => Promise<AsyncIterator<String>>;
+  lastName: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   school: <T = SchoolSubscription>() => T;
   phone: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  gender: () => Promise<AsyncIterator<Gender>>;
   role: () => Promise<AsyncIterator<Role>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -2758,14 +3321,141 @@ export interface UserNullablePromise
   extends Promise<User | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
+  firstName: () => Promise<String>;
+  middleName: () => Promise<String>;
+  lastName: () => Promise<String>;
   email: () => Promise<String>;
   school: <T = SchoolPromise>() => T;
   phone: () => Promise<String>;
   password: () => Promise<String>;
+  gender: () => Promise<Gender>;
   role: () => Promise<Role>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface Student {
+  id: ID_Output;
+  firstName: String;
+  middleName?: String;
+  lastName: String;
+  admNo: String;
+  domitory?: String;
+  feeBalance?: String;
+  gender?: Gender;
+  prefect?: Prefect;
+  createdAt?: DateTimeOutput;
+  updatedAt?: DateTimeOutput;
+}
+
+export interface StudentPromise extends Promise<Student>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  firstName: () => Promise<String>;
+  middleName: () => Promise<String>;
+  lastName: () => Promise<String>;
+  admNo: () => Promise<String>;
+  domitory: () => Promise<String>;
+  class: <T = ClassroomPromise>() => T;
+  feeBalance: () => Promise<String>;
+  subjects: <T = FragmentableArray<ClassSubject>>(args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  gender: () => Promise<Gender>;
+  school: <T = SchoolPromise>() => T;
+  prefect: () => Promise<Prefect>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface StudentSubscription
+  extends Promise<AsyncIterator<Student>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  firstName: () => Promise<AsyncIterator<String>>;
+  middleName: () => Promise<AsyncIterator<String>>;
+  lastName: () => Promise<AsyncIterator<String>>;
+  admNo: () => Promise<AsyncIterator<String>>;
+  domitory: () => Promise<AsyncIterator<String>>;
+  class: <T = ClassroomSubscription>() => T;
+  feeBalance: () => Promise<AsyncIterator<String>>;
+  subjects: <T = Promise<AsyncIterator<ClassSubjectSubscription>>>(args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  gender: () => Promise<AsyncIterator<Gender>>;
+  school: <T = SchoolSubscription>() => T;
+  prefect: () => Promise<AsyncIterator<Prefect>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface StudentNullablePromise
+  extends Promise<Student | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  firstName: () => Promise<String>;
+  middleName: () => Promise<String>;
+  lastName: () => Promise<String>;
+  admNo: () => Promise<String>;
+  domitory: () => Promise<String>;
+  class: <T = ClassroomPromise>() => T;
+  feeBalance: () => Promise<String>;
+  subjects: <T = FragmentableArray<ClassSubject>>(args?: {
+    where?: ClassSubjectWhereInput;
+    orderBy?: ClassSubjectOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  gender: () => Promise<Gender>;
+  school: <T = SchoolPromise>() => T;
+  prefect: () => Promise<Prefect>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ClassSubject {
+  id: ID_Output;
+}
+
+export interface ClassSubjectPromise
+  extends Promise<ClassSubject>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  subject: <T = SubjectPromise>() => T;
+  assignee: <T = UserPromise>() => T;
+  class: <T = ClassroomPromise>() => T;
+}
+
+export interface ClassSubjectSubscription
+  extends Promise<AsyncIterator<ClassSubject>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  subject: <T = SubjectSubscription>() => T;
+  assignee: <T = UserSubscription>() => T;
+  class: <T = ClassroomSubscription>() => T;
+}
+
+export interface ClassSubjectNullablePromise
+  extends Promise<ClassSubject | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  subject: <T = SubjectPromise>() => T;
+  assignee: <T = UserPromise>() => T;
+  class: <T = ClassroomPromise>() => T;
 }
 
 export interface Subject {
@@ -2778,8 +3468,7 @@ export interface Subject {
 export interface SubjectPromise extends Promise<Subject>, Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
-  assignee: <T = UserPromise>() => T;
-  class: <T = ClassroomPromise>() => T;
+  school: <T = SchoolPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -2789,8 +3478,7 @@ export interface SubjectSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
-  assignee: <T = UserSubscription>() => T;
-  class: <T = ClassroomSubscription>() => T;
+  school: <T = SchoolSubscription>() => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -2800,8 +3488,7 @@ export interface SubjectNullablePromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
-  assignee: <T = UserPromise>() => T;
-  class: <T = ClassroomPromise>() => T;
+  school: <T = SchoolPromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -2881,6 +3568,62 @@ export interface AggregateClassLevelPromise
 
 export interface AggregateClassLevelSubscription
   extends Promise<AsyncIterator<AggregateClassLevel>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ClassSubjectConnection {
+  pageInfo: PageInfo;
+  edges: ClassSubjectEdge[];
+}
+
+export interface ClassSubjectConnectionPromise
+  extends Promise<ClassSubjectConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ClassSubjectEdge>>() => T;
+  aggregate: <T = AggregateClassSubjectPromise>() => T;
+}
+
+export interface ClassSubjectConnectionSubscription
+  extends Promise<AsyncIterator<ClassSubjectConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ClassSubjectEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateClassSubjectSubscription>() => T;
+}
+
+export interface ClassSubjectEdge {
+  node: ClassSubject;
+  cursor: String;
+}
+
+export interface ClassSubjectEdgePromise
+  extends Promise<ClassSubjectEdge>,
+    Fragmentable {
+  node: <T = ClassSubjectPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ClassSubjectEdgeSubscription
+  extends Promise<AsyncIterator<ClassSubjectEdge>>,
+    Fragmentable {
+  node: <T = ClassSubjectSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateClassSubject {
+  count: Int;
+}
+
+export interface AggregateClassSubjectPromise
+  extends Promise<AggregateClassSubject>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateClassSubjectSubscription
+  extends Promise<AsyncIterator<AggregateClassSubject>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -3328,6 +4071,47 @@ export interface ClassLevelPreviousValuesSubscription
   description: () => Promise<AsyncIterator<String>>;
 }
 
+export interface ClassSubjectSubscriptionPayload {
+  mutation: MutationType;
+  node: ClassSubject;
+  updatedFields: String[];
+  previousValues: ClassSubjectPreviousValues;
+}
+
+export interface ClassSubjectSubscriptionPayloadPromise
+  extends Promise<ClassSubjectSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ClassSubjectPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ClassSubjectPreviousValuesPromise>() => T;
+}
+
+export interface ClassSubjectSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ClassSubjectSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ClassSubjectSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ClassSubjectPreviousValuesSubscription>() => T;
+}
+
+export interface ClassSubjectPreviousValues {
+  id: ID_Output;
+}
+
+export interface ClassSubjectPreviousValuesPromise
+  extends Promise<ClassSubjectPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+}
+
+export interface ClassSubjectPreviousValuesSubscription
+  extends Promise<AsyncIterator<ClassSubjectPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+}
+
 export interface ClassroomSubscriptionPayload {
   mutation: MutationType;
   node: Classroom;
@@ -3356,6 +4140,7 @@ export interface ClassroomSubscriptionPayloadSubscription
 export interface ClassroomPreviousValues {
   id: ID_Output;
   name: String;
+  capacity: String;
   createdAt?: DateTimeOutput;
   updatedAt?: DateTimeOutput;
 }
@@ -3365,6 +4150,7 @@ export interface ClassroomPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   name: () => Promise<String>;
+  capacity: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -3374,6 +4160,7 @@ export interface ClassroomPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   name: () => Promise<AsyncIterator<String>>;
+  capacity: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -3511,7 +4298,7 @@ export interface SchoolPreviousValues {
   phone: String;
   schoolCode: String;
   imageUrl?: String;
-  level: Level;
+  level?: Level;
   createdAt?: DateTimeOutput;
   updatedAt?: DateTimeOutput;
 }
@@ -3573,10 +4360,14 @@ export interface StudentSubscriptionPayloadSubscription
 
 export interface StudentPreviousValues {
   id: ID_Output;
-  name: String;
+  firstName: String;
+  middleName?: String;
+  lastName: String;
   admNo: String;
   domitory?: String;
   feeBalance?: String;
+  gender?: Gender;
+  prefect?: Prefect;
   createdAt?: DateTimeOutput;
   updatedAt?: DateTimeOutput;
 }
@@ -3585,10 +4376,14 @@ export interface StudentPreviousValuesPromise
   extends Promise<StudentPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  name: () => Promise<String>;
+  firstName: () => Promise<String>;
+  middleName: () => Promise<String>;
+  lastName: () => Promise<String>;
   admNo: () => Promise<String>;
   domitory: () => Promise<String>;
   feeBalance: () => Promise<String>;
+  gender: () => Promise<Gender>;
+  prefect: () => Promise<Prefect>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -3597,10 +4392,14 @@ export interface StudentPreviousValuesSubscription
   extends Promise<AsyncIterator<StudentPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  name: () => Promise<AsyncIterator<String>>;
+  firstName: () => Promise<AsyncIterator<String>>;
+  middleName: () => Promise<AsyncIterator<String>>;
+  lastName: () => Promise<AsyncIterator<String>>;
   admNo: () => Promise<AsyncIterator<String>>;
   domitory: () => Promise<AsyncIterator<String>>;
   feeBalance: () => Promise<AsyncIterator<String>>;
+  gender: () => Promise<AsyncIterator<Gender>>;
+  prefect: () => Promise<AsyncIterator<Prefect>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -3682,10 +4481,13 @@ export interface UserSubscriptionPayloadSubscription
 
 export interface UserPreviousValues {
   id: ID_Output;
-  username: String;
+  firstName: String;
+  middleName?: String;
+  lastName: String;
   email?: String;
   phone?: String;
   password: String;
+  gender?: Gender;
   role: Role;
   createdAt?: DateTimeOutput;
   updatedAt?: DateTimeOutput;
@@ -3695,10 +4497,13 @@ export interface UserPreviousValuesPromise
   extends Promise<UserPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  username: () => Promise<String>;
+  firstName: () => Promise<String>;
+  middleName: () => Promise<String>;
+  lastName: () => Promise<String>;
   email: () => Promise<String>;
   phone: () => Promise<String>;
   password: () => Promise<String>;
+  gender: () => Promise<Gender>;
   role: () => Promise<Role>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -3708,10 +4513,13 @@ export interface UserPreviousValuesSubscription
   extends Promise<AsyncIterator<UserPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  username: () => Promise<AsyncIterator<String>>;
+  firstName: () => Promise<AsyncIterator<String>>;
+  middleName: () => Promise<AsyncIterator<String>>;
+  lastName: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   phone: () => Promise<AsyncIterator<String>>;
   password: () => Promise<AsyncIterator<String>>;
+  gender: () => Promise<AsyncIterator<Gender>>;
   role: () => Promise<AsyncIterator<Role>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -3784,6 +4592,10 @@ export const models: Model[] = [
     embedded: false
   },
   {
+    name: "ClassSubject",
+    embedded: false
+  },
+  {
     name: "ClassLevel",
     embedded: false
   },
@@ -3793,6 +4605,14 @@ export const models: Model[] = [
   },
   {
     name: "Level",
+    embedded: false
+  },
+  {
+    name: "Prefect",
+    embedded: false
+  },
+  {
+    name: "Gender",
     embedded: false
   }
 ];

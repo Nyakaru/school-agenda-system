@@ -61,10 +61,30 @@ type Mutation {
     """
     Update a subject
     """
-    updateSubject(data: SubjectUpdateInput!, where: SubjectWhereUniqueInput): Subject
+    updateSubject(data: SubjectUpdateInput!, where: SubjectWhereUniqueInput): SubjectResponse
 
     """
     Create a class level
     """
-    addClassLevel(input: ClassLevelCreateInput!): ClassLevelResponse!
+    addClassLevel(input: ClassLevelCreateInput!): AddClassLevelResponse!
+
+    """
+    Create a class subject
+    """
+    addClassSubject(input: ClassSubjectCreateInput!): ClassSubjectResponse!
+
+    """
+    Update a subject
+    """
+    updateClassSubject(data: ClassSubjectUpdateInput!, where: ClassSubjectWhereUniqueInput): ClassSubjectResponse
+
+    """
+    Create a student
+    """
+    addStudent(input: StudentCreateInput!): StudentResponse!
+
+    """
+    Update a student
+    """
+    updateStudent(data: StudentUpdateInput!, where: StudentWhereUniqueInput): StudentResponse
 }

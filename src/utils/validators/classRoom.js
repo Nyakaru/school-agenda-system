@@ -5,6 +5,7 @@ export const acceptableClassRoomPayload = yup.object().shape({
     name: yup.string().trim().required('Class name is required'),
     level: yup.object().required('Class level is required'),
     classTeacher: yup.object(),
+    capacity: yup.string().trim().required('Class capacity name is required'),
 });
 
 export const acceptableClassLevelPayload = yup.object().shape({

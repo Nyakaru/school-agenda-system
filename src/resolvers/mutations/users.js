@@ -9,7 +9,7 @@ const createToken = user => {
     return sign(
         {
             username: user['username'],
-            school: user['school']['schoolCode'],
+            school: user['school']['id'],
             email: user['email'],
             phone: user['phone'],
             role: user['role'],
@@ -63,10 +63,10 @@ const signup = async (_, { input }, context, _info) => {
             };
         }
 
-        const school = input['school']['connect']['schoolCode'];
+        const school = input['school']['connect']['id'];
         let message = 'School with that name does not exist';
         let field = 'School';
-        const schoolExists = await context.prisma.school({ schoolCode: school });
+        const schoolExists = await context.prisma.school({ id: school });
         if (!schoolExists) {
             return utils.sendErrorResponse(field, message);
         }

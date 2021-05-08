@@ -13,6 +13,7 @@ type Query {
     Retrieve all schools
     """
     schools: [School]
+    schoolDetails: SchoolDetailsResponse
 
     """
     Retrieve all countries
@@ -25,17 +26,17 @@ type Query {
     regions(input: GlobalQueryInput): [Region]
 
     """
-    Retrieve all classrooms in a school
-    """
-    getClassRooms: [Classroom]
-
-    """
-    Retrieve all subjects in a class
-    """
-    getSubjects(input: GlobalQueryInput): [Subject]
-
-    """
     Retrieve all class levels in a school
     """
-    getClassLevels(input: GlobalQueryInput): [ClassLevel]
+    getClassLevels(input: GlobalQueryInput): ClassLevelResponse
+
+    """
+    Get a single classroom
+    """
+    getSingleClassRoom(input: GlobalQueryInput): SingleClassroomResponse
+
+    """
+    Get all students in a school
+    """
+    schoolStudents: [Student]
 }

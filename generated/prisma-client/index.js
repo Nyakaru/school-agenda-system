@@ -33,6 +33,10 @@ var models = [
     embedded: false
   },
   {
+    name: "ClassSubject",
+    embedded: false
+  },
+  {
     name: "ClassLevel",
     embedded: false
   },
@@ -42,6 +46,14 @@ var models = [
   },
   {
     name: "Level",
+    embedded: false
+  },
+  {
+    name: "Prefect",
+    embedded: false
+  },
+  {
+    name: "Gender",
     embedded: false
   }
 ];

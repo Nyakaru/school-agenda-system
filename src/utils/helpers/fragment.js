@@ -1,22 +1,22 @@
 //@ts-check
 const schoolFragment = /* GraphQL */ `
     fragment SchoolWithDetails on School {
-        schoolCode
+        name
         address
         phone
-        region {
+        email
+        subjects {
             name
             id
-            country {
-                name
-                id
-            }
         }
-        id
-        name
-        email
-        level
-        imageUrl
+        classes {
+            name
+        }
+        classLevels {
+            id
+            levelName
+            description
+        }
     }
 `;
 
@@ -24,7 +24,10 @@ const userFragment = /* GraphQL */ `
     fragment UserWithDetails on User {
         id
         role
-        username
+        gender
+        firstName
+        middleName
+        lastName
         password
         email
         phone
@@ -61,42 +64,50 @@ const regionFragment = /* GraphQL */ `
 
 const classRoomFragment = /* GraphQL */ `
     fragment classRoomWithDetails on Classroom {
-        id
         name
+        capacity
         level {
             id
             levelName
+            description
         }
+        classTeacher {
+            firstName
+            id
+            lastName
+        }
+        id
+        students {
+            admNo
+            id
+            firstName
+            lastName
+            gender
+            middleName
+            feeBalance
+        }
+        subjects {
+            assignee {
+                firstName
+                lastName
+            }
+            id
+            subject {
+                name
+                id
+            }
+        }
+    }
+`;
+
+const schoolSubjectFragment = /* GraphQL */ `
+    fragment SubjectWithDetails on Subject {
+        id
+        name
         school {
             id
             name
             schoolCode
-            phone
-            email
-            level
-            address
-        }
-        students {
-            id
-            name
-            admNo
-        }
-        subjects {
-            id
-            assignee {
-                id
-                username
-                email
-                role
-                phone
-            }
-            name
-        }
-        classTeacher {
-            id
-            username
-            phone
-            email
         }
     }
 `;
@@ -104,10 +115,9 @@ const classRoomFragment = /* GraphQL */ `
 const subjectFragment = /* GraphQL */ `
     fragment SubjectWithDetails on Subject {
         id
-        name
         assignee {
             id
-            username
+            firstName
             email
             role
             phone
@@ -117,6 +127,10 @@ const subjectFragment = /* GraphQL */ `
             name
             level
         }
+        subject {
+            id
+            name
+        }
     }
 `;
 
@@ -125,14 +139,42 @@ const classLevelFragment = /* GraphQL */ `
         id
         levelName
         description
-        school {
+        classRooms {
             id
             name
-            schoolCode
-            phone
-            email
-            level
-            address
+            capacity
+        }
+    }
+`;
+
+const studentFragment = /* GraphQL */ `
+    fragment StudentWithDetails on Student {
+        id
+        gender
+        firstName
+        middleName
+        lastName
+        prefect
+        admNo
+        domitory
+        feeBalance
+        class {
+            id
+            name
+            level {
+                levelName
+            }
+            classTeacher {
+                firstName
+                id
+                lastName
+            }
+        }
+        subjects {
+            id
+            subject {
+                name
+            }
         }
     }
 `;
@@ -144,4 +186,6 @@ export default {
     classRoomFragment,
     subjectFragment,
     classLevelFragment,
+    studentFragment,
+    schoolSubjectFragment,
 };
