@@ -29,4 +29,14 @@ type Query {
     Retrieve all class levels in a school
     """
     getClassLevels(input: GlobalQueryInput): ClassLevelResponse
+
+    """
+    Get a single classroom
+    """
+    getSingleClassRoom(input: GlobalQueryInput): SingleClassroomResponse
+
+    """
+    Get all students in a school
+    """
+    schoolStudents: [Student]
 }

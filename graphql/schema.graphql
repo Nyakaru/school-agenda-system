@@ -60,6 +60,17 @@ type ClassroomRes {
     subjects: [ClassSubject]
 }
 
+type SingleClassroomResponse {
+    id: ID!
+    name: String!
+    level: ClassLevel!
+    classTeacher: User
+    capacity: String!
+    students: [Student]
+    subjects: [ClassSubject]
+    totalStudents: Int!
+}
+
 type Student {
     id: ID!
     firstName: String!
@@ -110,6 +121,24 @@ type ClassLevelRes {
     totalClassRooms: Int!
     totalStudents: Int!
     classRooms: [Classroom]
+}
+
+type AddClassLevelRes {
+    id: ID!
+    levelName: String!
+    description: String
+}
+
+type AddClassLevelResponse {
+    payload: AddClassLevelRes
+    error: Error
+}
+
+type ClassSubject {
+    id: ID!
+    subject: Subject!
+    assignee: User
+    class: Classroom!
 }
 
 type AddClassLevelRes {
