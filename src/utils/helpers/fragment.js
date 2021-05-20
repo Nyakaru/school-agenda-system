@@ -1,10 +1,17 @@
 //@ts-check
 const schoolFragment = /* GraphQL */ `
     fragment SchoolWithDetails on School {
+        id
         name
         address
         phone
         email
+        level
+        region {
+            id
+            name
+        }
+        schoolCode
         subjects {
             name
             id

@@ -5,7 +5,7 @@ const passwordExp = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%
 export const acceptableUserPayload = yup.object().shape({
     firstName: yup.string().trim().min(3, 'First name should be more than 3 characters').required('First name is required'),
     lastName: yup.string().trim().min(3, 'Last name should be more than 3 characters').required('Last name is required'),
-    middleName: yup.string().trim().min(3, 'Last name should be more than 3 characters'),
+    middleName: yup.string().trim().min(3, 'Middle name should be more than 3 characters'),
     email: yup.string().trim().email('Invalid email format'),
     school: yup.object().required('School is required'),
     gender: yup.object(),

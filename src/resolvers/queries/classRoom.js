@@ -19,7 +19,7 @@ const getClassLevels = async (_, _args, context, _info) => {
 
             const studentsCounts = await Promise.all(totalStudentsPromise);
             const totalStudents = studentsCounts.reduce(reducer, 0);
-            const currentLevel = { ...level, totalClassRooms: level['classRooms'].length, totalStudents };
+            const currentLevel = { ...level, totalClassRooms: level['classRooms'].length, totalStudents, classRooms: level['classRooms'] };
             return currentLevel;
         });
         const result = await Promise.all(mappedLevels);

@@ -109,6 +109,7 @@ type ClassLevelRes {
     description: String
     totalClassRooms: Int!
     totalStudents: Int!
+    classRooms: [Classroom]
 }
 
 type AddClassLevelRes {

@@ -42,30 +42,33 @@ const signup = async (_, { input }, context, _info) => {
             return { error: { field, message } };
         }
 
-        let existingUser = {};
+        let existingEmail = {};
+        let existingPhone = {};
+        let message = 'User with that email already exists';
+        let field = 'email';
 
         if (input['email']) {
             const user1 = await context.prisma.user({ email: input['email'] });
-            existingUser = user1;
+            existingEmail = user1;
+        }
+        if (existingEmail) {
+            return utils.sendErrorResponse(field, message);
         }
 
         if (input['phone']) {
             const user2 = await context.prisma.user({ phone: input['phone'] });
-            existingUser = user2;
+            existingPhone = user2;
         }
-
-        if (existingUser) {
-            return {
-                error: {
-                    field: 'Email',
-                    message: 'User with that email or phone already exists',
-                },
-            };
+        message = 'User with that phone already exists';
+        field = 'phone';
+        if (existingPhone) {
+            return utils.sendErrorResponse(field, message);
         }
 
         const school = input['school']['connect']['id'];
-        let message = 'School with that name does not exist';
-        let field = 'School';
+        message = 'School with that name does not exist';
+        field = 'school';
+
         const schoolExists = await context.prisma.school({ id: school });
         if (!schoolExists) {
             return utils.sendErrorResponse(field, message);
