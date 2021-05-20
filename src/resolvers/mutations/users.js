@@ -9,7 +9,7 @@ const createToken = user => {
     return sign(
         {
             username: user['username'],
-            school: user['school']['schoolCode'],
+            school: user['school']['id'],
             email: user['email'],
             phone: user['phone'],
             role: user['role'],
@@ -42,31 +42,34 @@ const signup = async (_, { input }, context, _info) => {
             return { error: { field, message } };
         }
 
-        let existingUser = {};
+        let existingEmail = {};
+        let existingPhone = {};
+        let message = 'User with that email already exists';
+        let field = 'email';
 
         if (input['email']) {
             const user1 = await context.prisma.user({ email: input['email'] });
-            existingUser = user1;
+            existingEmail = user1;
+        }
+        if (existingEmail) {
+            return utils.sendErrorResponse(field, message);
         }
 
         if (input['phone']) {
             const user2 = await context.prisma.user({ phone: input['phone'] });
-            existingUser = user2;
+            existingPhone = user2;
+        }
+        message = 'User with that phone already exists';
+        field = 'phone';
+        if (existingPhone) {
+            return utils.sendErrorResponse(field, message);
         }
 
-        if (existingUser) {
-            return {
-                error: {
-                    field: 'Email',
-                    message: 'User with that email or phone already exists',
-                },
-            };
-        }
+        const school = input['school']['connect']['id'];
+        message = 'School with that name does not exist';
+        field = 'school';
 
-        const school = input['school']['connect']['schoolCode'];
-        let message = 'School with that name does not exist';
-        let field = 'School';
-        const schoolExists = await context.prisma.school({ schoolCode: school });
+        const schoolExists = await context.prisma.school({ id: school });
         if (!schoolExists) {
             return utils.sendErrorResponse(field, message);
         }
