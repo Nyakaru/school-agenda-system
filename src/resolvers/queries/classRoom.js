@@ -2,6 +2,22 @@
 import { utils } from '../../utils';
 
 /**
+ * Retrieve a single classroom in a school
+ *
+ * @param {import('../../..').IRequestContext} context
+ * @returns
+ */
+const getSingleClassRoom = async (_, { input }, context, _info) => {
+    try {
+        const data = await context.prisma.classroom({ id: input['id'] }).$fragment(utils.classRoomFragment);
+        const response = { ...data, totalStudents: data?.students?.length };
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+/**
  * Retrieve classm levels associated with a school
  *
  * @param {import('../../..').IRequestContext} context
@@ -39,5 +55,6 @@ const getClassLevels = async (_, _args, context, _info) => {
 };
 
 export default {
+    getSingleClassRoom,
     getClassLevels,
 };

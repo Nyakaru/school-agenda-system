@@ -48,7 +48,6 @@ type Classroom {
     capacity: String!
     students: [Student]
     subjects: [ClassSubject]
-    totalStudents: Int!
 }
 
 type ClassroomRes {
