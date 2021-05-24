@@ -48,7 +48,6 @@ type Classroom {
     capacity: String!
     students: [Student]
     subjects: [ClassSubject]
-    totalStudents: Int!
 }
 
 type ClassroomRes {
@@ -121,7 +120,7 @@ type ClassLevelRes {
     description: String
     totalClassRooms: Int!
     totalStudents: Int!
-    classRooms: [Classroom]
+    classRooms: [SingleClassroomResponse]
 }
 
 type ClassSubject {

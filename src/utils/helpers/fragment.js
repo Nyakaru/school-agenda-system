@@ -153,6 +153,10 @@ const classLevelFragment = /* GraphQL */ `
             students {
                 id
             }
+            level {
+                id
+                levelName
+            }
         }
     }
 `;
