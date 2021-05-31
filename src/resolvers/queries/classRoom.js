@@ -2,6 +2,22 @@
 import { utils } from '../../utils';
 
 /**
+ * Retrieve a single classroom in a school
+ *
+ * @param {import('../../..').IRequestContext} context
+ * @returns
+ */
+const getSingleClassRoom = async (_, { input }, context, _info) => {
+    try {
+        const data = await context.prisma.classroom({ id: input['id'] }).$fragment(utils.classRoomFragment);
+        const response = { ...data, totalStudents: data?.students?.length };
+        return response;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+/**
  * Retrieve classm levels associated with a school
  *
  * @param {import('../../..').IRequestContext} context
@@ -19,13 +35,7 @@ const getClassLevels = async (_, _args, context, _info) => {
 
             const studentsCounts = await Promise.all(totalStudentsPromise);
             const totalStudents = studentsCounts.reduce(reducer, 0);
-
-            //calaculate total students in class
-            const classRooms = level['classRooms'].map(classRoom => {
-                classRoom.totalStudents = classRoom.students.length;
-                return classRoom;
-            });
-            const currentLevel = { ...level, totalClassRooms: level['classRooms'].length, totalStudents, classRooms: classRooms };
+            const currentLevel = { ...level, totalClassRooms: level['classRooms'].length, totalStudents };
             return currentLevel;
         });
         const result = await Promise.all(mappedLevels);
@@ -38,6 +48,37 @@ const getClassLevels = async (_, _args, context, _info) => {
     }
 };
 
+/**
+ * Retrieve all classrooms in a school
+ *
+ * @param {import('../../..').IRequestContext} context
+ * @returns
+ */
+const getSchoolClassrooms = async (_, { input }, context, _info) => {
+    const school = context.user.school;
+    try {
+        if (input && input['id']) {
+            const details = await context.prisma
+                .school({ id: school })
+                .classes({
+                    where: {
+                        level: {
+                            id: input['id'],
+                        },
+                    },
+                })
+                .$fragment(utils.classRoomFragment);
+            return details;
+        }
+        const classes = await context.prisma.school({ id: school }).classes().$fragment(utils.classRoomFragment);
+        return classes;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export default {
+    getSingleClassRoom,
     getClassLevels,
+    getSchoolClassrooms,
 };

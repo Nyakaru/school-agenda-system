@@ -39,4 +39,9 @@ type Query {
     Get all students in a school
     """
     schoolStudents: [Student]
+
+    """
+    Get all classrooms in a school
+    """
+    getSchoolClassrooms(input: GlobalQueryInput): [ClassroomRes]
 }
