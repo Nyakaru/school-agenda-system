@@ -43,7 +43,7 @@ const schoolDetails = async (_, _args, context, _info) => {
 const schoolStudents = async (_, _args, context, _info) => {
     try {
         const school = context.user.school;
-        const details = await context.prisma.school({ id: school }).students();
+        const details = await context.prisma.school({ id: school }).students().$fragment(utils.studentFragment);
         return details;
     } catch (error) {
         console.log(error);

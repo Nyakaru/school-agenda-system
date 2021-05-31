@@ -176,6 +176,7 @@ const studentFragment = /* GraphQL */ `
             id
             name
             level {
+                id
                 levelName
             }
             classTeacher {
