@@ -50,8 +50,23 @@ const schoolStudents = async (_, _args, context, _info) => {
     }
 };
 
+/**
+ * Retrieve all subjects in a school
+ *
+ * @param {import('../../..').IRequestContext} context
+ * @returns
+ */
+const schoolSubjects = async (_, _args, context, _info) => {
+    try {
+        const school = context.user.school;
+        return await context.prisma.school({ id: school }).subjects();
+    } catch (error) {
+        console.log(error);
+    }
+};
 export default {
     schools,
     schoolDetails,
     schoolStudents,
+    schoolSubjects,
 };
