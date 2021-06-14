@@ -9,6 +9,7 @@ export const acceptableUserPayload = yup.object().shape({
     email: yup.string().trim().email('Invalid email format'),
     school: yup.object().required('School is required'),
     gender: yup.object(),
+    department: yup.object(),
     role: yup.string().trim(),
     phone: yup.string().trim().min(11, 'Phone number have 11 to 13 numbers').max(13, 'Phone number have 11 to 13 numbers').required('Phone number is required'),
     password: yup

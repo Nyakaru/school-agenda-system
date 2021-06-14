@@ -5,6 +5,7 @@ type User {
     lastName: String!
     email: String @unique
     school: School @relation(link: INLINE)
+    department: [Department]
     phone: String @unique
     password: String!
     gender: Gender @default(value: NA)
@@ -23,6 +24,7 @@ type School {
     schoolCode: String! @unique
     classes: [Classroom]
     subjects: [Subject]
+    department: [Department]
     imageUrl: String
     level: Level @default(value: GENERAL)
     students: [Student]
@@ -79,9 +81,20 @@ type Student {
 type Subject {
     id: ID! @id
     name: String!
+    subjectCode: String
+    subjectAbv: String
+    department: Department @relation(link: INLINE)
+    status: SubjectStatus @default(value: OPTIONAL)
     school: School! @relation(link: INLINE)
     createdAt: DateTime @createdAt
     updatedAt: DateTime @updatedAt
+}
+
+type Department {
+    id: ID! @id
+    name: String!
+    hod: User @relation(link: INLINE)
+    school: School!
 }
 
 type ClassSubject {
@@ -126,4 +139,9 @@ enum Gender {
     MALE
     FEMALE
     NA
+}
+
+enum SubjectStatus {
+    OPTIONAL
+    COMPULSORY
 }

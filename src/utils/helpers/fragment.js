@@ -11,10 +11,21 @@ const schoolFragment = /* GraphQL */ `
             id
             name
         }
+        department {
+            id
+            name
+        }
         schoolCode
         subjects {
             name
             id
+            subjectCode
+            subjectAbv
+            status
+            department {
+                id
+                name
+            }
         }
         classes {
             name
@@ -38,6 +49,10 @@ const userFragment = /* GraphQL */ `
         password
         email
         phone
+        department {
+            id
+            name
+        }
         school {
             schoolCode
             address
@@ -102,6 +117,13 @@ const classRoomFragment = /* GraphQL */ `
             subject {
                 name
                 id
+                subjectCode
+                subjectAbv
+                status
+                department {
+                    id
+                    name
+                }
             }
         }
     }
@@ -111,6 +133,13 @@ const schoolSubjectFragment = /* GraphQL */ `
     fragment SubjectWithDetails on Subject {
         id
         name
+        subjectCode
+        subjectAbv
+        status
+        department {
+            id
+            name
+        }
         school {
             id
             name
@@ -137,6 +166,13 @@ const subjectFragment = /* GraphQL */ `
         subject {
             id
             name
+            subjectCode
+            subjectAbv
+            status
+            department {
+                id
+                name
+            }
         }
     }
 `;
