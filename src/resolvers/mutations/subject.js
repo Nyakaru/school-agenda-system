@@ -31,7 +31,9 @@ const addClassSubject = async (_, { input }, context, _info) => {
         field = 'classSubject';
         const classSubjectExists = await context.prisma.classroom({ id: classroom }).subjects({
             where: {
-                id: subject,
+                subject: {
+                    id: subject,
+                },
             },
         });
         if (classSubjectExists.length) {

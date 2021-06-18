@@ -161,7 +161,13 @@ const subjectFragment = /* GraphQL */ `
         class {
             id
             name
-            level
+            level {
+                id
+                levelName
+                school {
+                    id
+                }
+            }
         }
         subject {
             id
