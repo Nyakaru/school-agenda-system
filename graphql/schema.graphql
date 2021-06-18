@@ -7,6 +7,7 @@ type User {
     lastName: String!
     email: String
     role: Role!
+    department: [Department]
     phone: String
     school: School!
     gender: Gender
@@ -103,6 +104,17 @@ type StudentRes {
 type Subject {
     id: ID!
     name: String!
+    school: School!
+    subjectCode: String
+    subjectAbv: String
+    department: Department
+    status: SubjectStatus
+}
+
+type Department {
+    id: ID!
+    name: String!
+    hod: User
     school: School!
 }
 
@@ -206,6 +218,7 @@ input SignUpInput {
     password: String!
     gender: Gender
     role: Role
+    department: DepartmentCreateManyWithoutHodInput
 }
 
 input LoginInput {
@@ -237,6 +250,14 @@ input SchoolCreateOneInput {
 }
 
 input RegionWhereUniqueInput {
+    id: ID
+}
+
+input DepartmentCreateManyWithoutHodInput {
+    connect: [DepartmentWhereUniqueInput!]
+}
+
+input DepartmentWhereUniqueInput {
     id: ID
 }
 
@@ -275,6 +296,11 @@ input UserUpdateInput {
     phone: String
     gender: Gender
     role: Role
+    department: DepartmentUpdateManyWithoutHodInput
+}
+
+input DepartmentUpdateManyWithoutHodInput {
+    connect: [DepartmentWhereUniqueInput!]
 }
 
 input CountryCreateInput {
@@ -376,10 +402,22 @@ input ClassroomCreateOneWithoutSubjectsInput {
 }
 
 input SubjectCreateInput {
+    id: ID
     name: String!
-    school: SchoolCreateOneInput!
+    subjectCode: String
+    subjectAbv: String
+    department: DepartmentCreateOneInput
+    status: SubjectStatus
+    school: SchoolCreateOneWithoutSubjectsInput!
 }
 
+input SchoolCreateOneWithoutSubjectsInput {
+    connect: SchoolWhereUniqueInput
+}
+
+input DepartmentCreateOneInput {
+    connect: DepartmentWhereUniqueInput
+}
 input ClassLevelCreateInput {
     levelName: String!
     description: String
@@ -396,8 +434,15 @@ input ClassroomUpdateOneRequiredWithoutSubjectsInput {
 
 input SubjectUpdateInput {
     name: String
+    subjectCode: String
+    subjectAbv: String
+    department: DepartmentUpdateOneInput
+    status: SubjectStatus
 }
 
+input DepartmentUpdateOneInput {
+    connect: DepartmentWhereUniqueInput
+}
 input ClassroomCreateOneWithoutStudentsInput {
     connect: ClassroomWhereUniqueInput
 }
@@ -483,4 +528,9 @@ enum Gender {
     MALE
     FEMALE
     NA
+}
+
+enum SubjectStatus {
+    OPTIONAL
+    COMPULSORY
 }

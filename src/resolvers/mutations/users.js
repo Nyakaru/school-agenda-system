@@ -74,6 +74,17 @@ const signup = async (_, { input }, context, _info) => {
             return utils.sendErrorResponse(field, message);
         }
 
+        if (input['department']) {
+            message = 'Department does not exist';
+            field = 'department';
+            const departments = await context.prisma.school({ id: school }).department();
+
+            const depExists = departments.filter(item => item?.id == input['department']['connect']['id']);
+            if (!depExists.length) {
+                return utils.sendErrorResponse(field, message);
+            }
+        }
+
         const password = await hash(input['password'], 10);
         const user = await context.prisma.createUser({ ...input, password });
 

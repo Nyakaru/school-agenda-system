@@ -49,4 +49,9 @@ type Query {
     Get all subjects in a school
     """
     schoolSubjects: [Subject]
+
+    """
+    Get all departments in a school
+    """
+    departments: [Department]
 }

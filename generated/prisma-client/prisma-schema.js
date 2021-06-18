@@ -19,6 +19,10 @@ type AggregateCountry {
   count: Int!
 }
 
+type AggregateDepartment {
+  count: Int!
+}
+
 type AggregateRegion {
   count: Int!
 }
@@ -1032,6 +1036,257 @@ input CountryWhereUniqueInput {
 
 scalar DateTime
 
+type Department {
+  id: ID!
+  name: String!
+  hod: User
+  school: School!
+}
+
+type DepartmentConnection {
+  pageInfo: PageInfo!
+  edges: [DepartmentEdge]!
+  aggregate: AggregateDepartment!
+}
+
+input DepartmentCreateInput {
+  id: ID
+  name: String!
+  hod: UserCreateOneWithoutDepartmentInput
+  school: SchoolCreateOneWithoutDepartmentInput!
+}
+
+input DepartmentCreateManyWithoutHodInput {
+  create: [DepartmentCreateWithoutHodInput!]
+  connect: [DepartmentWhereUniqueInput!]
+}
+
+input DepartmentCreateManyWithoutSchoolInput {
+  create: [DepartmentCreateWithoutSchoolInput!]
+  connect: [DepartmentWhereUniqueInput!]
+}
+
+input DepartmentCreateOneInput {
+  create: DepartmentCreateInput
+  connect: DepartmentWhereUniqueInput
+}
+
+input DepartmentCreateWithoutHodInput {
+  id: ID
+  name: String!
+  school: SchoolCreateOneWithoutDepartmentInput!
+}
+
+input DepartmentCreateWithoutSchoolInput {
+  id: ID
+  name: String!
+  hod: UserCreateOneWithoutDepartmentInput
+}
+
+type DepartmentEdge {
+  node: Department!
+  cursor: String!
+}
+
+enum DepartmentOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+}
+
+type DepartmentPreviousValues {
+  id: ID!
+  name: String!
+}
+
+input DepartmentScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  AND: [DepartmentScalarWhereInput!]
+  OR: [DepartmentScalarWhereInput!]
+  NOT: [DepartmentScalarWhereInput!]
+}
+
+type DepartmentSubscriptionPayload {
+  mutation: MutationType!
+  node: Department
+  updatedFields: [String!]
+  previousValues: DepartmentPreviousValues
+}
+
+input DepartmentSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: DepartmentWhereInput
+  AND: [DepartmentSubscriptionWhereInput!]
+  OR: [DepartmentSubscriptionWhereInput!]
+  NOT: [DepartmentSubscriptionWhereInput!]
+}
+
+input DepartmentUpdateDataInput {
+  name: String
+  hod: UserUpdateOneWithoutDepartmentInput
+  school: SchoolUpdateOneRequiredWithoutDepartmentInput
+}
+
+input DepartmentUpdateInput {
+  name: String
+  hod: UserUpdateOneWithoutDepartmentInput
+  school: SchoolUpdateOneRequiredWithoutDepartmentInput
+}
+
+input DepartmentUpdateManyDataInput {
+  name: String
+}
+
+input DepartmentUpdateManyMutationInput {
+  name: String
+}
+
+input DepartmentUpdateManyWithoutHodInput {
+  create: [DepartmentCreateWithoutHodInput!]
+  delete: [DepartmentWhereUniqueInput!]
+  connect: [DepartmentWhereUniqueInput!]
+  set: [DepartmentWhereUniqueInput!]
+  disconnect: [DepartmentWhereUniqueInput!]
+  update: [DepartmentUpdateWithWhereUniqueWithoutHodInput!]
+  upsert: [DepartmentUpsertWithWhereUniqueWithoutHodInput!]
+  deleteMany: [DepartmentScalarWhereInput!]
+  updateMany: [DepartmentUpdateManyWithWhereNestedInput!]
+}
+
+input DepartmentUpdateManyWithoutSchoolInput {
+  create: [DepartmentCreateWithoutSchoolInput!]
+  delete: [DepartmentWhereUniqueInput!]
+  connect: [DepartmentWhereUniqueInput!]
+  set: [DepartmentWhereUniqueInput!]
+  disconnect: [DepartmentWhereUniqueInput!]
+  update: [DepartmentUpdateWithWhereUniqueWithoutSchoolInput!]
+  upsert: [DepartmentUpsertWithWhereUniqueWithoutSchoolInput!]
+  deleteMany: [DepartmentScalarWhereInput!]
+  updateMany: [DepartmentUpdateManyWithWhereNestedInput!]
+}
+
+input DepartmentUpdateManyWithWhereNestedInput {
+  where: DepartmentScalarWhereInput!
+  data: DepartmentUpdateManyDataInput!
+}
+
+input DepartmentUpdateOneInput {
+  create: DepartmentCreateInput
+  update: DepartmentUpdateDataInput
+  upsert: DepartmentUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: DepartmentWhereUniqueInput
+}
+
+input DepartmentUpdateWithoutHodDataInput {
+  name: String
+  school: SchoolUpdateOneRequiredWithoutDepartmentInput
+}
+
+input DepartmentUpdateWithoutSchoolDataInput {
+  name: String
+  hod: UserUpdateOneWithoutDepartmentInput
+}
+
+input DepartmentUpdateWithWhereUniqueWithoutHodInput {
+  where: DepartmentWhereUniqueInput!
+  data: DepartmentUpdateWithoutHodDataInput!
+}
+
+input DepartmentUpdateWithWhereUniqueWithoutSchoolInput {
+  where: DepartmentWhereUniqueInput!
+  data: DepartmentUpdateWithoutSchoolDataInput!
+}
+
+input DepartmentUpsertNestedInput {
+  update: DepartmentUpdateDataInput!
+  create: DepartmentCreateInput!
+}
+
+input DepartmentUpsertWithWhereUniqueWithoutHodInput {
+  where: DepartmentWhereUniqueInput!
+  update: DepartmentUpdateWithoutHodDataInput!
+  create: DepartmentCreateWithoutHodInput!
+}
+
+input DepartmentUpsertWithWhereUniqueWithoutSchoolInput {
+  where: DepartmentWhereUniqueInput!
+  update: DepartmentUpdateWithoutSchoolDataInput!
+  create: DepartmentCreateWithoutSchoolInput!
+}
+
+input DepartmentWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  name: String
+  name_not: String
+  name_in: [String!]
+  name_not_in: [String!]
+  name_lt: String
+  name_lte: String
+  name_gt: String
+  name_gte: String
+  name_contains: String
+  name_not_contains: String
+  name_starts_with: String
+  name_not_starts_with: String
+  name_ends_with: String
+  name_not_ends_with: String
+  hod: UserWhereInput
+  school: SchoolWhereInput
+  AND: [DepartmentWhereInput!]
+  OR: [DepartmentWhereInput!]
+  NOT: [DepartmentWhereInput!]
+}
+
+input DepartmentWhereUniqueInput {
+  id: ID
+}
+
 enum Gender {
   MALE
   FEMALE
@@ -1071,6 +1326,12 @@ type Mutation {
   upsertCountry(where: CountryWhereUniqueInput!, create: CountryCreateInput!, update: CountryUpdateInput!): Country!
   deleteCountry(where: CountryWhereUniqueInput!): Country
   deleteManyCountries(where: CountryWhereInput): BatchPayload!
+  createDepartment(data: DepartmentCreateInput!): Department!
+  updateDepartment(data: DepartmentUpdateInput!, where: DepartmentWhereUniqueInput!): Department
+  updateManyDepartments(data: DepartmentUpdateManyMutationInput!, where: DepartmentWhereInput): BatchPayload!
+  upsertDepartment(where: DepartmentWhereUniqueInput!, create: DepartmentCreateInput!, update: DepartmentUpdateInput!): Department!
+  deleteDepartment(where: DepartmentWhereUniqueInput!): Department
+  deleteManyDepartments(where: DepartmentWhereInput): BatchPayload!
   createRegion(data: RegionCreateInput!): Region!
   updateRegion(data: RegionUpdateInput!, where: RegionWhereUniqueInput!): Region
   updateManyRegions(data: RegionUpdateManyMutationInput!, where: RegionWhereInput): BatchPayload!
@@ -1139,6 +1400,9 @@ type Query {
   country(where: CountryWhereUniqueInput!): Country
   countries(where: CountryWhereInput, orderBy: CountryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Country]!
   countriesConnection(where: CountryWhereInput, orderBy: CountryOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): CountryConnection!
+  department(where: DepartmentWhereUniqueInput!): Department
+  departments(where: DepartmentWhereInput, orderBy: DepartmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Department]!
+  departmentsConnection(where: DepartmentWhereInput, orderBy: DepartmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DepartmentConnection!
   region(where: RegionWhereUniqueInput!): Region
   regions(where: RegionWhereInput, orderBy: RegionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Region]!
   regionsConnection(where: RegionWhereInput, orderBy: RegionOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RegionConnection!
@@ -1326,6 +1590,7 @@ type School {
   schoolCode: String!
   classes(where: ClassroomWhereInput, orderBy: ClassroomOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Classroom!]
   subjects(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subject!]
+  department(where: DepartmentWhereInput, orderBy: DepartmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Department!]
   imageUrl: String
   level: Level
   students(where: StudentWhereInput, orderBy: StudentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Student!]
@@ -1350,6 +1615,7 @@ input SchoolCreateInput {
   schoolCode: String!
   classes: ClassroomCreateManyWithoutSchoolInput
   subjects: SubjectCreateManyWithoutSchoolInput
+  department: DepartmentCreateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentCreateManyWithoutSchoolInput
@@ -1368,6 +1634,11 @@ input SchoolCreateOneWithoutClassesInput {
 
 input SchoolCreateOneWithoutClassLevelsInput {
   create: SchoolCreateWithoutClassLevelsInput
+  connect: SchoolWhereUniqueInput
+}
+
+input SchoolCreateOneWithoutDepartmentInput {
+  create: SchoolCreateWithoutDepartmentInput
   connect: SchoolWhereUniqueInput
 }
 
@@ -1390,6 +1661,7 @@ input SchoolCreateWithoutClassesInput {
   phone: String!
   schoolCode: String!
   subjects: SubjectCreateManyWithoutSchoolInput
+  department: DepartmentCreateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentCreateManyWithoutSchoolInput
@@ -1406,9 +1678,26 @@ input SchoolCreateWithoutClassLevelsInput {
   schoolCode: String!
   classes: ClassroomCreateManyWithoutSchoolInput
   subjects: SubjectCreateManyWithoutSchoolInput
+  department: DepartmentCreateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentCreateManyWithoutSchoolInput
+}
+
+input SchoolCreateWithoutDepartmentInput {
+  id: ID
+  name: String!
+  region: RegionCreateOneInput
+  address: String
+  email: String
+  phone: String!
+  schoolCode: String!
+  classes: ClassroomCreateManyWithoutSchoolInput
+  subjects: SubjectCreateManyWithoutSchoolInput
+  imageUrl: String
+  level: Level
+  students: StudentCreateManyWithoutSchoolInput
+  classLevels: ClassLevelCreateManyWithoutSchoolInput
 }
 
 input SchoolCreateWithoutStudentsInput {
@@ -1421,6 +1710,7 @@ input SchoolCreateWithoutStudentsInput {
   schoolCode: String!
   classes: ClassroomCreateManyWithoutSchoolInput
   subjects: SubjectCreateManyWithoutSchoolInput
+  department: DepartmentCreateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   classLevels: ClassLevelCreateManyWithoutSchoolInput
@@ -1435,6 +1725,7 @@ input SchoolCreateWithoutSubjectsInput {
   phone: String!
   schoolCode: String!
   classes: ClassroomCreateManyWithoutSchoolInput
+  department: DepartmentCreateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentCreateManyWithoutSchoolInput
@@ -1509,6 +1800,7 @@ input SchoolUpdateDataInput {
   schoolCode: String
   classes: ClassroomUpdateManyWithoutSchoolInput
   subjects: SubjectUpdateManyWithoutSchoolInput
+  department: DepartmentUpdateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentUpdateManyWithoutSchoolInput
@@ -1524,6 +1816,7 @@ input SchoolUpdateInput {
   schoolCode: String
   classes: ClassroomUpdateManyWithoutSchoolInput
   subjects: SubjectUpdateManyWithoutSchoolInput
+  department: DepartmentUpdateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentUpdateManyWithoutSchoolInput
@@ -1546,6 +1839,13 @@ input SchoolUpdateOneInput {
   upsert: SchoolUpsertNestedInput
   delete: Boolean
   disconnect: Boolean
+  connect: SchoolWhereUniqueInput
+}
+
+input SchoolUpdateOneRequiredWithoutDepartmentInput {
+  create: SchoolCreateWithoutDepartmentInput
+  update: SchoolUpdateWithoutDepartmentDataInput
+  upsert: SchoolUpsertWithoutDepartmentInput
   connect: SchoolWhereUniqueInput
 }
 
@@ -1589,6 +1889,7 @@ input SchoolUpdateWithoutClassesDataInput {
   phone: String
   schoolCode: String
   subjects: SubjectUpdateManyWithoutSchoolInput
+  department: DepartmentUpdateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentUpdateManyWithoutSchoolInput
@@ -1604,9 +1905,25 @@ input SchoolUpdateWithoutClassLevelsDataInput {
   schoolCode: String
   classes: ClassroomUpdateManyWithoutSchoolInput
   subjects: SubjectUpdateManyWithoutSchoolInput
+  department: DepartmentUpdateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentUpdateManyWithoutSchoolInput
+}
+
+input SchoolUpdateWithoutDepartmentDataInput {
+  name: String
+  region: RegionUpdateOneInput
+  address: String
+  email: String
+  phone: String
+  schoolCode: String
+  classes: ClassroomUpdateManyWithoutSchoolInput
+  subjects: SubjectUpdateManyWithoutSchoolInput
+  imageUrl: String
+  level: Level
+  students: StudentUpdateManyWithoutSchoolInput
+  classLevels: ClassLevelUpdateManyWithoutSchoolInput
 }
 
 input SchoolUpdateWithoutStudentsDataInput {
@@ -1618,6 +1935,7 @@ input SchoolUpdateWithoutStudentsDataInput {
   schoolCode: String
   classes: ClassroomUpdateManyWithoutSchoolInput
   subjects: SubjectUpdateManyWithoutSchoolInput
+  department: DepartmentUpdateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   classLevels: ClassLevelUpdateManyWithoutSchoolInput
@@ -1631,6 +1949,7 @@ input SchoolUpdateWithoutSubjectsDataInput {
   phone: String
   schoolCode: String
   classes: ClassroomUpdateManyWithoutSchoolInput
+  department: DepartmentUpdateManyWithoutSchoolInput
   imageUrl: String
   level: Level
   students: StudentUpdateManyWithoutSchoolInput
@@ -1650,6 +1969,11 @@ input SchoolUpsertWithoutClassesInput {
 input SchoolUpsertWithoutClassLevelsInput {
   update: SchoolUpdateWithoutClassLevelsDataInput!
   create: SchoolCreateWithoutClassLevelsInput!
+}
+
+input SchoolUpsertWithoutDepartmentInput {
+  update: SchoolUpdateWithoutDepartmentDataInput!
+  create: SchoolCreateWithoutDepartmentInput!
 }
 
 input SchoolUpsertWithoutStudentsInput {
@@ -1754,6 +2078,9 @@ input SchoolWhereInput {
   subjects_every: SubjectWhereInput
   subjects_some: SubjectWhereInput
   subjects_none: SubjectWhereInput
+  department_every: DepartmentWhereInput
+  department_some: DepartmentWhereInput
+  department_none: DepartmentWhereInput
   imageUrl: String
   imageUrl_not: String
   imageUrl_in: [String!]
@@ -2325,6 +2652,10 @@ input StudentWhereUniqueInput {
 type Subject {
   id: ID!
   name: String!
+  subjectCode: String
+  subjectAbv: String
+  department: Department
+  status: SubjectStatus
   school: School!
   createdAt: DateTime
   updatedAt: DateTime
@@ -2339,6 +2670,10 @@ type SubjectConnection {
 input SubjectCreateInput {
   id: ID
   name: String!
+  subjectCode: String
+  subjectAbv: String
+  department: DepartmentCreateOneInput
+  status: SubjectStatus
   school: SchoolCreateOneWithoutSubjectsInput!
 }
 
@@ -2355,6 +2690,10 @@ input SubjectCreateOneInput {
 input SubjectCreateWithoutSchoolInput {
   id: ID
   name: String!
+  subjectCode: String
+  subjectAbv: String
+  department: DepartmentCreateOneInput
+  status: SubjectStatus
 }
 
 type SubjectEdge {
@@ -2367,6 +2706,12 @@ enum SubjectOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  subjectCode_ASC
+  subjectCode_DESC
+  subjectAbv_ASC
+  subjectAbv_DESC
+  status_ASC
+  status_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -2376,6 +2721,9 @@ enum SubjectOrderByInput {
 type SubjectPreviousValues {
   id: ID!
   name: String!
+  subjectCode: String
+  subjectAbv: String
+  status: SubjectStatus
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -2409,6 +2757,38 @@ input SubjectScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  subjectCode: String
+  subjectCode_not: String
+  subjectCode_in: [String!]
+  subjectCode_not_in: [String!]
+  subjectCode_lt: String
+  subjectCode_lte: String
+  subjectCode_gt: String
+  subjectCode_gte: String
+  subjectCode_contains: String
+  subjectCode_not_contains: String
+  subjectCode_starts_with: String
+  subjectCode_not_starts_with: String
+  subjectCode_ends_with: String
+  subjectCode_not_ends_with: String
+  subjectAbv: String
+  subjectAbv_not: String
+  subjectAbv_in: [String!]
+  subjectAbv_not_in: [String!]
+  subjectAbv_lt: String
+  subjectAbv_lte: String
+  subjectAbv_gt: String
+  subjectAbv_gte: String
+  subjectAbv_contains: String
+  subjectAbv_not_contains: String
+  subjectAbv_starts_with: String
+  subjectAbv_not_starts_with: String
+  subjectAbv_ends_with: String
+  subjectAbv_not_ends_with: String
+  status: SubjectStatus
+  status_not: SubjectStatus
+  status_in: [SubjectStatus!]
+  status_not_in: [SubjectStatus!]
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -2428,6 +2808,11 @@ input SubjectScalarWhereInput {
   AND: [SubjectScalarWhereInput!]
   OR: [SubjectScalarWhereInput!]
   NOT: [SubjectScalarWhereInput!]
+}
+
+enum SubjectStatus {
+  OPTIONAL
+  COMPULSORY
 }
 
 type SubjectSubscriptionPayload {
@@ -2450,20 +2835,34 @@ input SubjectSubscriptionWhereInput {
 
 input SubjectUpdateDataInput {
   name: String
+  subjectCode: String
+  subjectAbv: String
+  department: DepartmentUpdateOneInput
+  status: SubjectStatus
   school: SchoolUpdateOneRequiredWithoutSubjectsInput
 }
 
 input SubjectUpdateInput {
   name: String
+  subjectCode: String
+  subjectAbv: String
+  department: DepartmentUpdateOneInput
+  status: SubjectStatus
   school: SchoolUpdateOneRequiredWithoutSubjectsInput
 }
 
 input SubjectUpdateManyDataInput {
   name: String
+  subjectCode: String
+  subjectAbv: String
+  status: SubjectStatus
 }
 
 input SubjectUpdateManyMutationInput {
   name: String
+  subjectCode: String
+  subjectAbv: String
+  status: SubjectStatus
 }
 
 input SubjectUpdateManyWithoutSchoolInput {
@@ -2492,6 +2891,10 @@ input SubjectUpdateOneRequiredInput {
 
 input SubjectUpdateWithoutSchoolDataInput {
   name: String
+  subjectCode: String
+  subjectAbv: String
+  department: DepartmentUpdateOneInput
+  status: SubjectStatus
 }
 
 input SubjectUpdateWithWhereUniqueWithoutSchoolInput {
@@ -2539,6 +2942,39 @@ input SubjectWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  subjectCode: String
+  subjectCode_not: String
+  subjectCode_in: [String!]
+  subjectCode_not_in: [String!]
+  subjectCode_lt: String
+  subjectCode_lte: String
+  subjectCode_gt: String
+  subjectCode_gte: String
+  subjectCode_contains: String
+  subjectCode_not_contains: String
+  subjectCode_starts_with: String
+  subjectCode_not_starts_with: String
+  subjectCode_ends_with: String
+  subjectCode_not_ends_with: String
+  subjectAbv: String
+  subjectAbv_not: String
+  subjectAbv_in: [String!]
+  subjectAbv_not_in: [String!]
+  subjectAbv_lt: String
+  subjectAbv_lte: String
+  subjectAbv_gt: String
+  subjectAbv_gte: String
+  subjectAbv_contains: String
+  subjectAbv_not_contains: String
+  subjectAbv_starts_with: String
+  subjectAbv_not_starts_with: String
+  subjectAbv_ends_with: String
+  subjectAbv_not_ends_with: String
+  department: DepartmentWhereInput
+  status: SubjectStatus
+  status_not: SubjectStatus
+  status_in: [SubjectStatus!]
+  status_not_in: [SubjectStatus!]
   school: SchoolWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
@@ -2570,6 +3006,7 @@ type Subscription {
   classSubject(where: ClassSubjectSubscriptionWhereInput): ClassSubjectSubscriptionPayload
   classroom(where: ClassroomSubscriptionWhereInput): ClassroomSubscriptionPayload
   country(where: CountrySubscriptionWhereInput): CountrySubscriptionPayload
+  department(where: DepartmentSubscriptionWhereInput): DepartmentSubscriptionPayload
   region(where: RegionSubscriptionWhereInput): RegionSubscriptionPayload
   school(where: SchoolSubscriptionWhereInput): SchoolSubscriptionPayload
   student(where: StudentSubscriptionWhereInput): StudentSubscriptionPayload
@@ -2584,6 +3021,7 @@ type User {
   lastName: String!
   email: String
   school: School
+  department(where: DepartmentWhereInput, orderBy: DepartmentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Department!]
   phone: String
   password: String!
   gender: Gender
@@ -2605,6 +3043,7 @@ input UserCreateInput {
   lastName: String!
   email: String
   school: SchoolCreateOneInput
+  department: DepartmentCreateManyWithoutHodInput
   phone: String
   password: String!
   gender: Gender
@@ -2614,6 +3053,24 @@ input UserCreateInput {
 input UserCreateOneInput {
   create: UserCreateInput
   connect: UserWhereUniqueInput
+}
+
+input UserCreateOneWithoutDepartmentInput {
+  create: UserCreateWithoutDepartmentInput
+  connect: UserWhereUniqueInput
+}
+
+input UserCreateWithoutDepartmentInput {
+  id: ID
+  firstName: String!
+  middleName: String
+  lastName: String!
+  email: String
+  school: SchoolCreateOneInput
+  phone: String
+  password: String!
+  gender: Gender
+  role: Role
 }
 
 type UserEdge {
@@ -2684,6 +3141,7 @@ input UserUpdateDataInput {
   lastName: String
   email: String
   school: SchoolUpdateOneInput
+  department: DepartmentUpdateManyWithoutHodInput
   phone: String
   password: String
   gender: Gender
@@ -2696,6 +3154,7 @@ input UserUpdateInput {
   lastName: String
   email: String
   school: SchoolUpdateOneInput
+  department: DepartmentUpdateManyWithoutHodInput
   phone: String
   password: String
   gender: Gender
@@ -2722,9 +3181,35 @@ input UserUpdateOneInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateOneWithoutDepartmentInput {
+  create: UserCreateWithoutDepartmentInput
+  update: UserUpdateWithoutDepartmentDataInput
+  upsert: UserUpsertWithoutDepartmentInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: UserWhereUniqueInput
+}
+
+input UserUpdateWithoutDepartmentDataInput {
+  firstName: String
+  middleName: String
+  lastName: String
+  email: String
+  school: SchoolUpdateOneInput
+  phone: String
+  password: String
+  gender: Gender
+  role: Role
+}
+
 input UserUpsertNestedInput {
   update: UserUpdateDataInput!
   create: UserCreateInput!
+}
+
+input UserUpsertWithoutDepartmentInput {
+  update: UserUpdateWithoutDepartmentDataInput!
+  create: UserCreateWithoutDepartmentInput!
 }
 
 input UserWhereInput {
@@ -2799,6 +3284,9 @@ input UserWhereInput {
   email_ends_with: String
   email_not_ends_with: String
   school: SchoolWhereInput
+  department_every: DepartmentWhereInput
+  department_some: DepartmentWhereInput
+  department_none: DepartmentWhereInput
   phone: String
   phone_not: String
   phone_in: [String!]

@@ -18,7 +18,6 @@ const addClassSubject = async (_, { input }, context, _info) => {
 
         const user = context.user.school;
         const classroom = input['class']['connect']['id'];
-        const userId = input['assignee']['connect']['id'];
         const subject = input['subject']['connect']['id'];
 
         let message = 'Classroom does not exist';
@@ -28,17 +27,30 @@ const addClassSubject = async (_, { input }, context, _info) => {
             return utils.sendErrorResponse(field, message);
         }
 
-        message = 'Subject does not exist';
-        field = 'subject';
-        const subjectExists = await context.prisma.school({ id: user }).subjects({ where: { id: subject } });
-        if (!subjectExists.length) {
+        message = 'Subject exists in this class';
+        field = 'classSubject';
+        const classSubjectExists = await context.prisma.classroom({ id: classroom }).subjects({
+            where: {
+                id: subject,
+            },
+        });
+        if (classSubjectExists.length) {
             return utils.sendErrorResponse(field, message);
         }
 
-        message = 'User does not exist';
-        field = 'assignee';
-        const userExists = await context.prisma.user({ id: userId });
-        if (!userExists) {
+        if (input['assignee']) {
+            message = 'User does not exist';
+            field = 'assignee';
+            const userExists = await context.prisma.user({ id: input['assignee']['connect']['id'] });
+            if (!userExists) {
+                return utils.sendErrorResponse(field, message);
+            }
+        }
+
+        message = 'Subject does not exist in this school';
+        field = 'subject';
+        const subjectExists = await context.prisma.school({ id: user }).subjects({ where: { id: subject } });
+        if (!subjectExists.length) {
             return utils.sendErrorResponse(field, message);
         }
 
@@ -67,6 +79,8 @@ const addSubject = async (_, { input }, context, _info) => {
         }
         const school = input['school']['connect']['id'];
         const name = input['name'];
+        const subjectCode = input['subjectCode'];
+        const subjectAbv = input['subjectAbv'];
 
         let message = 'School does not exist';
         let field = 'school';
@@ -75,10 +89,35 @@ const addSubject = async (_, { input }, context, _info) => {
             return utils.sendErrorResponse(field, message);
         }
 
-        message = 'Subject already exists in this school';
+        if (input['department']) {
+            message = 'Department does not exist';
+            field = 'department';
+            const departments = await context.prisma.school({ id: school }).department();
+
+            const depExists = departments.filter(item => item?.id == input['department']['connect']['id']);
+            if (!depExists.length) {
+                return utils.sendErrorResponse(field, message);
+            }
+        }
+
+        message = 'Subject name already exists';
         field = 'name';
         const subjectExists = await context.prisma.school({ id: school }).subjects({ where: { name: name } });
         if (subjectExists.length) {
+            return utils.sendErrorResponse(field, message);
+        }
+
+        message = 'Subject code already exists';
+        field = 'subjectCode';
+        const codeExists = await context.prisma.school({ id: school }).subjects({ where: { subjectCode: subjectCode } });
+        if (codeExists.length) {
+            return utils.sendErrorResponse(field, message);
+        }
+
+        message = 'Subject abv already exists';
+        field = 'abv';
+        const abvExists = await context.prisma.school({ id: school }).subjects({ where: { subjectAbv: subjectAbv } });
+        if (abvExists.length) {
             return utils.sendErrorResponse(field, message);
         }
 
@@ -87,6 +126,7 @@ const addSubject = async (_, { input }, context, _info) => {
             payload: subject,
         };
     } catch (error) {
+        console.log({ error });
         utils.sendErrorResponse('General', error.message);
     }
 };
