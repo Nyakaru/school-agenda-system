@@ -1,12 +1,15 @@
 //@ts-check
 import { ApolloServer } from 'apollo-server-express';
 import express from 'express';
+import cors from 'cors';
+
 import { verify } from 'jsonwebtoken';
 import { prisma } from '../generated/prisma-client';
 import { schema } from './schema';
 import { configs } from './configs';
 
 const app = express();
+app.use(cors()); // not having cors enabled will cause an access control error
 const PORT = process.env.PORT || 4000;
 
 const server = new ApolloServer({

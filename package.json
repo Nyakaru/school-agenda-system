@@ -7,11 +7,10 @@
   "license": "MIT",
   "scripts": {
     "dev": "nodemon --exec npx babel-node src/index.js",
-    "build":"babel src -d dist",
+    "build": "babel src -d dist",
     "start": "node dist/index.js",
     "prisma": "prisma1 generate",
     "deploy": "prisma1 deploy"
-
   },
   "dependencies": {
     "@babel/cli": "^7.10.5",
@@ -22,6 +21,7 @@
     "apollo-boost": "^0.4.9",
     "apollo-server-express": "^2.19.2",
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
