@@ -236,6 +236,40 @@ const studentFragment = /* GraphQL */ `
     }
 `;
 
+const timetableFragment = /* GraphQL */ `
+    fragment TimetableWithDetails on Timetable {
+        id
+        class {
+            id
+            name
+            level {
+                id
+                levelName
+            }
+        }
+        teacher {
+            id
+            firstName
+        }
+        weekday
+        event
+        type
+        start
+        end
+        school {
+            id
+            name
+        }
+        subject {
+            id
+            subject {
+                id
+                name
+            }
+        }
+    }
+`;
+
 export default {
     schoolFragment,
     userFragment,
@@ -245,4 +279,5 @@ export default {
     classLevelFragment,
     studentFragment,
     schoolSubjectFragment,
+    timetableFragment,
 };

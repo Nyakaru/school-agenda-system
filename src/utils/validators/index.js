@@ -4,6 +4,7 @@ import { acceptableSchoolPayload } from './school';
 import { acceptableClassRoomPayload, acceptableClassLevelPayload } from './classRoom';
 import { acceptableSubjectPayload, acceptableClassSubjectPayload } from './subject';
 import { acceptableStudentPayload } from './student';
+import { acceptableTimetablePayload } from './timetable';
 
 export const checkPayload = async (schema, payload) => {
     try {
@@ -21,5 +22,6 @@ export default {
     acceptableStudentPayload,
     acceptableClassLevelPayload,
     acceptableClassSubjectPayload,
+    acceptableTimetablePayload,
     checkPayload,
 };

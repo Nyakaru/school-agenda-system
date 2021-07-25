@@ -25,6 +25,7 @@ export interface Exists {
   school: (where?: SchoolWhereInput) => Promise<boolean>;
   student: (where?: StudentWhereInput) => Promise<boolean>;
   subject: (where?: SubjectWhereInput) => Promise<boolean>;
+  timeTable: (where?: TimeTableWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
 }
 
@@ -220,6 +221,25 @@ export interface Prisma {
     first?: Int;
     last?: Int;
   }) => SubjectConnectionPromise;
+  timeTable: (where: TimeTableWhereUniqueInput) => TimeTableNullablePromise;
+  timeTables: (args?: {
+    where?: TimeTableWhereInput;
+    orderBy?: TimeTableOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => FragmentableArray<TimeTable>;
+  timeTablesConnection: (args?: {
+    where?: TimeTableWhereInput;
+    orderBy?: TimeTableOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => TimeTableConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserNullablePromise;
   users: (args?: {
     where?: UserWhereInput;
@@ -389,6 +409,22 @@ export interface Prisma {
   }) => SubjectPromise;
   deleteSubject: (where: SubjectWhereUniqueInput) => SubjectPromise;
   deleteManySubjects: (where?: SubjectWhereInput) => BatchPayloadPromise;
+  createTimeTable: (data: TimeTableCreateInput) => TimeTablePromise;
+  updateTimeTable: (args: {
+    data: TimeTableUpdateInput;
+    where: TimeTableWhereUniqueInput;
+  }) => TimeTablePromise;
+  updateManyTimeTables: (args: {
+    data: TimeTableUpdateManyMutationInput;
+    where?: TimeTableWhereInput;
+  }) => BatchPayloadPromise;
+  upsertTimeTable: (args: {
+    where: TimeTableWhereUniqueInput;
+    create: TimeTableCreateInput;
+    update: TimeTableUpdateInput;
+  }) => TimeTablePromise;
+  deleteTimeTable: (where: TimeTableWhereUniqueInput) => TimeTablePromise;
+  deleteManyTimeTables: (where?: TimeTableWhereInput) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (args: {
     data: UserUpdateInput;
@@ -441,6 +477,9 @@ export interface Subscription {
   subject: (
     where?: SubjectSubscriptionWhereInput
   ) => SubjectSubscriptionPayloadSubscription;
+  timeTable: (
+    where?: TimeTableSubscriptionWhereInput
+  ) => TimeTableSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -576,6 +615,40 @@ export type SchoolOrderByInput =
   | "imageUrl_DESC"
   | "level_ASC"
   | "level_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type WeekDays =
+  | "MONDAY"
+  | "TUESDAY"
+  | "WEDNESDAY"
+  | "THURSDAY"
+  | "FRIDAY"
+  | "SATURDAY"
+  | "SUNDAY";
+
+export type TimetableType =
+  | "RECURRING"
+  | "SINGLE"
+  | "ALLDAY"
+  | "MONTHLY"
+  | "WEEKLY";
+
+export type TimeTableOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "weekday_ASC"
+  | "weekday_DESC"
+  | "start_ASC"
+  | "start_DESC"
+  | "end_ASC"
+  | "end_DESC"
+  | "event_ASC"
+  | "event_DESC"
+  | "type_ASC"
+  | "type_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1421,6 +1494,100 @@ export type StudentWhereUniqueInput = AtLeastOne<{
 export type SubjectWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
 }>;
+
+export type TimeTableWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
+export interface TimeTableWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  class?: Maybe<ClassroomWhereInput>;
+  teacher?: Maybe<UserWhereInput>;
+  weekday?: Maybe<WeekDays>;
+  weekday_not?: Maybe<WeekDays>;
+  weekday_in?: Maybe<WeekDays[] | WeekDays>;
+  weekday_not_in?: Maybe<WeekDays[] | WeekDays>;
+  start?: Maybe<String>;
+  start_not?: Maybe<String>;
+  start_in?: Maybe<String[] | String>;
+  start_not_in?: Maybe<String[] | String>;
+  start_lt?: Maybe<String>;
+  start_lte?: Maybe<String>;
+  start_gt?: Maybe<String>;
+  start_gte?: Maybe<String>;
+  start_contains?: Maybe<String>;
+  start_not_contains?: Maybe<String>;
+  start_starts_with?: Maybe<String>;
+  start_not_starts_with?: Maybe<String>;
+  start_ends_with?: Maybe<String>;
+  start_not_ends_with?: Maybe<String>;
+  end?: Maybe<String>;
+  end_not?: Maybe<String>;
+  end_in?: Maybe<String[] | String>;
+  end_not_in?: Maybe<String[] | String>;
+  end_lt?: Maybe<String>;
+  end_lte?: Maybe<String>;
+  end_gt?: Maybe<String>;
+  end_gte?: Maybe<String>;
+  end_contains?: Maybe<String>;
+  end_not_contains?: Maybe<String>;
+  end_starts_with?: Maybe<String>;
+  end_not_starts_with?: Maybe<String>;
+  end_ends_with?: Maybe<String>;
+  end_not_ends_with?: Maybe<String>;
+  event?: Maybe<String>;
+  event_not?: Maybe<String>;
+  event_in?: Maybe<String[] | String>;
+  event_not_in?: Maybe<String[] | String>;
+  event_lt?: Maybe<String>;
+  event_lte?: Maybe<String>;
+  event_gt?: Maybe<String>;
+  event_gte?: Maybe<String>;
+  event_contains?: Maybe<String>;
+  event_not_contains?: Maybe<String>;
+  event_starts_with?: Maybe<String>;
+  event_not_starts_with?: Maybe<String>;
+  event_ends_with?: Maybe<String>;
+  event_not_ends_with?: Maybe<String>;
+  type?: Maybe<TimetableType>;
+  type_not?: Maybe<TimetableType>;
+  type_in?: Maybe<TimetableType[] | TimetableType>;
+  type_not_in?: Maybe<TimetableType[] | TimetableType>;
+  school?: Maybe<SchoolWhereInput>;
+  subject?: Maybe<ClassSubjectWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<TimeTableWhereInput[] | TimeTableWhereInput>;
+  OR?: Maybe<TimeTableWhereInput[] | TimeTableWhereInput>;
+  NOT?: Maybe<TimeTableWhereInput[] | TimeTableWhereInput>;
+}
 
 export type UserWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
@@ -3220,6 +3387,87 @@ export interface SubjectUpdateManyMutationInput {
   status?: Maybe<SubjectStatus>;
 }
 
+export interface TimeTableCreateInput {
+  id?: Maybe<ID_Input>;
+  class?: Maybe<ClassroomCreateOneInput>;
+  teacher?: Maybe<UserCreateOneInput>;
+  weekday?: Maybe<WeekDays>;
+  start?: Maybe<String>;
+  end?: Maybe<String>;
+  event?: Maybe<String>;
+  type: TimetableType;
+  school?: Maybe<SchoolCreateOneInput>;
+  subject?: Maybe<ClassSubjectCreateOneInput>;
+}
+
+export interface ClassroomCreateOneInput {
+  create?: Maybe<ClassroomCreateInput>;
+  connect?: Maybe<ClassroomWhereUniqueInput>;
+}
+
+export interface ClassSubjectCreateOneInput {
+  create?: Maybe<ClassSubjectCreateInput>;
+  connect?: Maybe<ClassSubjectWhereUniqueInput>;
+}
+
+export interface TimeTableUpdateInput {
+  class?: Maybe<ClassroomUpdateOneInput>;
+  teacher?: Maybe<UserUpdateOneInput>;
+  weekday?: Maybe<WeekDays>;
+  start?: Maybe<String>;
+  end?: Maybe<String>;
+  event?: Maybe<String>;
+  type?: Maybe<TimetableType>;
+  school?: Maybe<SchoolUpdateOneInput>;
+  subject?: Maybe<ClassSubjectUpdateOneInput>;
+}
+
+export interface ClassroomUpdateOneInput {
+  create?: Maybe<ClassroomCreateInput>;
+  update?: Maybe<ClassroomUpdateDataInput>;
+  upsert?: Maybe<ClassroomUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<ClassroomWhereUniqueInput>;
+}
+
+export interface ClassroomUpdateDataInput {
+  name?: Maybe<String>;
+  level?: Maybe<ClassLevelUpdateOneRequiredWithoutClassRoomsInput>;
+  school?: Maybe<SchoolUpdateOneWithoutClassesInput>;
+  capacity?: Maybe<String>;
+  classTeacher?: Maybe<UserUpdateOneInput>;
+  students?: Maybe<StudentUpdateManyWithoutClassInput>;
+  subjects?: Maybe<ClassSubjectUpdateManyWithoutClassInput>;
+}
+
+export interface ClassroomUpsertNestedInput {
+  update: ClassroomUpdateDataInput;
+  create: ClassroomCreateInput;
+}
+
+export interface ClassSubjectUpdateOneInput {
+  create?: Maybe<ClassSubjectCreateInput>;
+  update?: Maybe<ClassSubjectUpdateDataInput>;
+  upsert?: Maybe<ClassSubjectUpsertNestedInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<ClassSubjectWhereUniqueInput>;
+}
+
+export interface ClassSubjectUpsertNestedInput {
+  update: ClassSubjectUpdateDataInput;
+  create: ClassSubjectCreateInput;
+}
+
+export interface TimeTableUpdateManyMutationInput {
+  weekday?: Maybe<WeekDays>;
+  start?: Maybe<String>;
+  end?: Maybe<String>;
+  event?: Maybe<String>;
+  type?: Maybe<TimetableType>;
+}
+
 export interface UserUpdateInput {
   firstName?: Maybe<String>;
   middleName?: Maybe<String>;
@@ -3365,6 +3613,23 @@ export interface SubjectSubscriptionWhereInput {
   AND?: Maybe<SubjectSubscriptionWhereInput[] | SubjectSubscriptionWhereInput>;
   OR?: Maybe<SubjectSubscriptionWhereInput[] | SubjectSubscriptionWhereInput>;
   NOT?: Maybe<SubjectSubscriptionWhereInput[] | SubjectSubscriptionWhereInput>;
+}
+
+export interface TimeTableSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<TimeTableWhereInput>;
+  AND?: Maybe<
+    TimeTableSubscriptionWhereInput[] | TimeTableSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    TimeTableSubscriptionWhereInput[] | TimeTableSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    TimeTableSubscriptionWhereInput[] | TimeTableSubscriptionWhereInput
+  >;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -4611,6 +4876,122 @@ export interface AggregateSubjectSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
+export interface TimeTable {
+  id: ID_Output;
+  weekday?: WeekDays;
+  start?: String;
+  end?: String;
+  event?: String;
+  type: TimetableType;
+  createdAt?: DateTimeOutput;
+  updatedAt?: DateTimeOutput;
+}
+
+export interface TimeTablePromise extends Promise<TimeTable>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  class: <T = ClassroomPromise>() => T;
+  teacher: <T = UserPromise>() => T;
+  weekday: () => Promise<WeekDays>;
+  start: () => Promise<String>;
+  end: () => Promise<String>;
+  event: () => Promise<String>;
+  type: () => Promise<TimetableType>;
+  school: <T = SchoolPromise>() => T;
+  subject: <T = ClassSubjectPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface TimeTableSubscription
+  extends Promise<AsyncIterator<TimeTable>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  class: <T = ClassroomSubscription>() => T;
+  teacher: <T = UserSubscription>() => T;
+  weekday: () => Promise<AsyncIterator<WeekDays>>;
+  start: () => Promise<AsyncIterator<String>>;
+  end: () => Promise<AsyncIterator<String>>;
+  event: () => Promise<AsyncIterator<String>>;
+  type: () => Promise<AsyncIterator<TimetableType>>;
+  school: <T = SchoolSubscription>() => T;
+  subject: <T = ClassSubjectSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface TimeTableNullablePromise
+  extends Promise<TimeTable | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  class: <T = ClassroomPromise>() => T;
+  teacher: <T = UserPromise>() => T;
+  weekday: () => Promise<WeekDays>;
+  start: () => Promise<String>;
+  end: () => Promise<String>;
+  event: () => Promise<String>;
+  type: () => Promise<TimetableType>;
+  school: <T = SchoolPromise>() => T;
+  subject: <T = ClassSubjectPromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface TimeTableConnection {
+  pageInfo: PageInfo;
+  edges: TimeTableEdge[];
+}
+
+export interface TimeTableConnectionPromise
+  extends Promise<TimeTableConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<TimeTableEdge>>() => T;
+  aggregate: <T = AggregateTimeTablePromise>() => T;
+}
+
+export interface TimeTableConnectionSubscription
+  extends Promise<AsyncIterator<TimeTableConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<TimeTableEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateTimeTableSubscription>() => T;
+}
+
+export interface TimeTableEdge {
+  node: TimeTable;
+  cursor: String;
+}
+
+export interface TimeTableEdgePromise
+  extends Promise<TimeTableEdge>,
+    Fragmentable {
+  node: <T = TimeTablePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface TimeTableEdgeSubscription
+  extends Promise<AsyncIterator<TimeTableEdge>>,
+    Fragmentable {
+  node: <T = TimeTableSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateTimeTable {
+  count: Int;
+}
+
+export interface AggregateTimeTablePromise
+  extends Promise<AggregateTimeTable>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateTimeTableSubscription
+  extends Promise<AsyncIterator<AggregateTimeTable>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface UserConnection {
   pageInfo: PageInfo;
   edges: UserEdge[];
@@ -5164,6 +5545,68 @@ export interface SubjectPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
+export interface TimeTableSubscriptionPayload {
+  mutation: MutationType;
+  node: TimeTable;
+  updatedFields: String[];
+  previousValues: TimeTablePreviousValues;
+}
+
+export interface TimeTableSubscriptionPayloadPromise
+  extends Promise<TimeTableSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = TimeTablePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = TimeTablePreviousValuesPromise>() => T;
+}
+
+export interface TimeTableSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<TimeTableSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = TimeTableSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = TimeTablePreviousValuesSubscription>() => T;
+}
+
+export interface TimeTablePreviousValues {
+  id: ID_Output;
+  weekday?: WeekDays;
+  start?: String;
+  end?: String;
+  event?: String;
+  type: TimetableType;
+  createdAt?: DateTimeOutput;
+  updatedAt?: DateTimeOutput;
+}
+
+export interface TimeTablePreviousValuesPromise
+  extends Promise<TimeTablePreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  weekday: () => Promise<WeekDays>;
+  start: () => Promise<String>;
+  end: () => Promise<String>;
+  event: () => Promise<String>;
+  type: () => Promise<TimetableType>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface TimeTablePreviousValuesSubscription
+  extends Promise<AsyncIterator<TimeTablePreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  weekday: () => Promise<AsyncIterator<WeekDays>>;
+  start: () => Promise<AsyncIterator<String>>;
+  end: () => Promise<AsyncIterator<String>>;
+  event: () => Promise<AsyncIterator<String>>;
+  type: () => Promise<AsyncIterator<TimetableType>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
 export interface UserSubscriptionPayload {
   mutation: MutationType;
   node: User;
@@ -5314,6 +5757,10 @@ export const models: Model[] = [
     embedded: false
   },
   {
+    name: "TimeTable",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },
@@ -5331,6 +5778,14 @@ export const models: Model[] = [
   },
   {
     name: "SubjectStatus",
+    embedded: false
+  },
+  {
+    name: "WeekDays",
+    embedded: false
+  },
+  {
+    name: "TimetableType",
     embedded: false
   }
 ];
