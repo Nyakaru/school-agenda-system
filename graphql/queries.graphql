@@ -54,4 +54,9 @@ type Query {
     Get all departments in a school
     """
     departments: [Department]
+
+    """
+    Get timetable of a class
+    """
+    getClasstimeTable(input: GlobalQueryInput): TimetableResponse!
 }

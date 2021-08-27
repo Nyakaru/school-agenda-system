@@ -39,6 +39,10 @@ type AggregateSubject {
   count: Int!
 }
 
+type AggregateTimeTable {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -345,6 +349,11 @@ input ClassroomCreateManyWithoutSchoolInput {
   connect: [ClassroomWhereUniqueInput!]
 }
 
+input ClassroomCreateOneInput {
+  create: ClassroomCreateInput
+  connect: ClassroomWhereUniqueInput
+}
+
 input ClassroomCreateOneWithoutStudentsInput {
   create: ClassroomCreateWithoutStudentsInput
   connect: ClassroomWhereUniqueInput
@@ -503,6 +512,16 @@ input ClassroomSubscriptionWhereInput {
   NOT: [ClassroomSubscriptionWhereInput!]
 }
 
+input ClassroomUpdateDataInput {
+  name: String
+  level: ClassLevelUpdateOneRequiredWithoutClassRoomsInput
+  school: SchoolUpdateOneWithoutClassesInput
+  capacity: String
+  classTeacher: UserUpdateOneInput
+  students: StudentUpdateManyWithoutClassInput
+  subjects: ClassSubjectUpdateManyWithoutClassInput
+}
+
 input ClassroomUpdateInput {
   name: String
   level: ClassLevelUpdateOneRequiredWithoutClassRoomsInput
@@ -550,6 +569,15 @@ input ClassroomUpdateManyWithoutSchoolInput {
 input ClassroomUpdateManyWithWhereNestedInput {
   where: ClassroomScalarWhereInput!
   data: ClassroomUpdateManyDataInput!
+}
+
+input ClassroomUpdateOneInput {
+  create: ClassroomCreateInput
+  update: ClassroomUpdateDataInput
+  upsert: ClassroomUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ClassroomWhereUniqueInput
 }
 
 input ClassroomUpdateOneRequiredWithoutSubjectsInput {
@@ -612,6 +640,11 @@ input ClassroomUpdateWithWhereUniqueWithoutLevelInput {
 input ClassroomUpdateWithWhereUniqueWithoutSchoolInput {
   where: ClassroomWhereUniqueInput!
   data: ClassroomUpdateWithoutSchoolDataInput!
+}
+
+input ClassroomUpsertNestedInput {
+  update: ClassroomUpdateDataInput!
+  create: ClassroomCreateInput!
 }
 
 input ClassroomUpsertWithoutStudentsInput {
@@ -744,6 +777,11 @@ input ClassSubjectCreateManyWithoutClassInput {
   connect: [ClassSubjectWhereUniqueInput!]
 }
 
+input ClassSubjectCreateOneInput {
+  create: ClassSubjectCreateInput
+  connect: ClassSubjectWhereUniqueInput
+}
+
 input ClassSubjectCreateWithoutClassInput {
   id: ID
   subject: SubjectCreateOneInput!
@@ -836,6 +874,15 @@ input ClassSubjectUpdateManyWithoutClassInput {
   deleteMany: [ClassSubjectScalarWhereInput!]
 }
 
+input ClassSubjectUpdateOneInput {
+  create: ClassSubjectCreateInput
+  update: ClassSubjectUpdateDataInput
+  upsert: ClassSubjectUpsertNestedInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ClassSubjectWhereUniqueInput
+}
+
 input ClassSubjectUpdateWithoutClassDataInput {
   subject: SubjectUpdateOneRequiredInput
   assignee: UserUpdateOneInput
@@ -849,6 +896,11 @@ input ClassSubjectUpdateWithWhereUniqueNestedInput {
 input ClassSubjectUpdateWithWhereUniqueWithoutClassInput {
   where: ClassSubjectWhereUniqueInput!
   data: ClassSubjectUpdateWithoutClassDataInput!
+}
+
+input ClassSubjectUpsertNestedInput {
+  update: ClassSubjectUpdateDataInput!
+  create: ClassSubjectCreateInput!
 }
 
 input ClassSubjectUpsertWithWhereUniqueNestedInput {
@@ -1356,6 +1408,12 @@ type Mutation {
   upsertSubject(where: SubjectWhereUniqueInput!, create: SubjectCreateInput!, update: SubjectUpdateInput!): Subject!
   deleteSubject(where: SubjectWhereUniqueInput!): Subject
   deleteManySubjects(where: SubjectWhereInput): BatchPayload!
+  createTimeTable(data: TimeTableCreateInput!): TimeTable!
+  updateTimeTable(data: TimeTableUpdateInput!, where: TimeTableWhereUniqueInput!): TimeTable
+  updateManyTimeTables(data: TimeTableUpdateManyMutationInput!, where: TimeTableWhereInput): BatchPayload!
+  upsertTimeTable(where: TimeTableWhereUniqueInput!, create: TimeTableCreateInput!, update: TimeTableUpdateInput!): TimeTable!
+  deleteTimeTable(where: TimeTableWhereUniqueInput!): TimeTable
+  deleteManyTimeTables(where: TimeTableWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -1415,6 +1473,9 @@ type Query {
   subject(where: SubjectWhereUniqueInput!): Subject
   subjects(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Subject]!
   subjectsConnection(where: SubjectWhereInput, orderBy: SubjectOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): SubjectConnection!
+  timeTable(where: TimeTableWhereUniqueInput!): TimeTable
+  timeTables(where: TimeTableWhereInput, orderBy: TimeTableOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [TimeTable]!
+  timeTablesConnection(where: TimeTableWhereInput, orderBy: TimeTableOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): TimeTableConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -3011,7 +3072,217 @@ type Subscription {
   school(where: SchoolSubscriptionWhereInput): SchoolSubscriptionPayload
   student(where: StudentSubscriptionWhereInput): StudentSubscriptionPayload
   subject(where: SubjectSubscriptionWhereInput): SubjectSubscriptionPayload
+  timeTable(where: TimeTableSubscriptionWhereInput): TimeTableSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+}
+
+type TimeTable {
+  id: ID!
+  class: Classroom
+  teacher: User
+  weekday: WeekDays
+  start: String
+  end: String
+  event: String
+  type: TimetableType!
+  school: School
+  subject: ClassSubject
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type TimeTableConnection {
+  pageInfo: PageInfo!
+  edges: [TimeTableEdge]!
+  aggregate: AggregateTimeTable!
+}
+
+input TimeTableCreateInput {
+  id: ID
+  class: ClassroomCreateOneInput
+  teacher: UserCreateOneInput
+  weekday: WeekDays
+  start: String
+  end: String
+  event: String
+  type: TimetableType!
+  school: SchoolCreateOneInput
+  subject: ClassSubjectCreateOneInput
+}
+
+type TimeTableEdge {
+  node: TimeTable!
+  cursor: String!
+}
+
+enum TimeTableOrderByInput {
+  id_ASC
+  id_DESC
+  weekday_ASC
+  weekday_DESC
+  start_ASC
+  start_DESC
+  end_ASC
+  end_DESC
+  event_ASC
+  event_DESC
+  type_ASC
+  type_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type TimeTablePreviousValues {
+  id: ID!
+  weekday: WeekDays
+  start: String
+  end: String
+  event: String
+  type: TimetableType!
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type TimeTableSubscriptionPayload {
+  mutation: MutationType!
+  node: TimeTable
+  updatedFields: [String!]
+  previousValues: TimeTablePreviousValues
+}
+
+input TimeTableSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: TimeTableWhereInput
+  AND: [TimeTableSubscriptionWhereInput!]
+  OR: [TimeTableSubscriptionWhereInput!]
+  NOT: [TimeTableSubscriptionWhereInput!]
+}
+
+enum TimetableType {
+  RECURRING
+  SINGLE
+  ALLDAY
+  MONTHLY
+  WEEKLY
+}
+
+input TimeTableUpdateInput {
+  class: ClassroomUpdateOneInput
+  teacher: UserUpdateOneInput
+  weekday: WeekDays
+  start: String
+  end: String
+  event: String
+  type: TimetableType
+  school: SchoolUpdateOneInput
+  subject: ClassSubjectUpdateOneInput
+}
+
+input TimeTableUpdateManyMutationInput {
+  weekday: WeekDays
+  start: String
+  end: String
+  event: String
+  type: TimetableType
+}
+
+input TimeTableWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  class: ClassroomWhereInput
+  teacher: UserWhereInput
+  weekday: WeekDays
+  weekday_not: WeekDays
+  weekday_in: [WeekDays!]
+  weekday_not_in: [WeekDays!]
+  start: String
+  start_not: String
+  start_in: [String!]
+  start_not_in: [String!]
+  start_lt: String
+  start_lte: String
+  start_gt: String
+  start_gte: String
+  start_contains: String
+  start_not_contains: String
+  start_starts_with: String
+  start_not_starts_with: String
+  start_ends_with: String
+  start_not_ends_with: String
+  end: String
+  end_not: String
+  end_in: [String!]
+  end_not_in: [String!]
+  end_lt: String
+  end_lte: String
+  end_gt: String
+  end_gte: String
+  end_contains: String
+  end_not_contains: String
+  end_starts_with: String
+  end_not_starts_with: String
+  end_ends_with: String
+  end_not_ends_with: String
+  event: String
+  event_not: String
+  event_in: [String!]
+  event_not_in: [String!]
+  event_lt: String
+  event_lte: String
+  event_gt: String
+  event_gte: String
+  event_contains: String
+  event_not_contains: String
+  event_starts_with: String
+  event_not_starts_with: String
+  event_ends_with: String
+  event_not_ends_with: String
+  type: TimetableType
+  type_not: TimetableType
+  type_in: [TimetableType!]
+  type_not_in: [TimetableType!]
+  school: SchoolWhereInput
+  subject: ClassSubjectWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [TimeTableWhereInput!]
+  OR: [TimeTableWhereInput!]
+  NOT: [TimeTableWhereInput!]
+}
+
+input TimeTableWhereUniqueInput {
+  id: ID
 }
 
 type User {
@@ -3348,6 +3619,16 @@ input UserWhereUniqueInput {
   id: ID
   email: String
   phone: String
+}
+
+enum WeekDays {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
 }
 `
       }

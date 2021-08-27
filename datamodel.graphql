@@ -112,6 +112,21 @@ type ClassLevel {
     classRooms: [Classroom]
 }
 
+type TimeTable {
+    id: ID! @id
+    class: Classroom
+    teacher: User
+    weekday: WeekDays
+    start: String
+    end: String
+    event: String
+    type: TimetableType!
+    school: School
+    subject: ClassSubject
+    createdAt: DateTime @createdAt
+    updatedAt: DateTime @updatedAt
+}
+
 enum Role {
     SUDO
     ADMIN
@@ -144,4 +159,22 @@ enum Gender {
 enum SubjectStatus {
     OPTIONAL
     COMPULSORY
+}
+
+enum WeekDays {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+enum TimetableType {
+    RECURRING
+    SINGLE
+    ALLDAY
+    MONTHLY
+    WEEKLY
 }

@@ -45,6 +45,10 @@ var models = [
     embedded: false
   },
   {
+    name: "TimeTable",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },
@@ -62,6 +66,14 @@ var models = [
   },
   {
     name: "SubjectStatus",
+    embedded: false
+  },
+  {
+    name: "WeekDays",
+    embedded: false
+  },
+  {
+    name: "TimetableType",
     embedded: false
   }
 ];

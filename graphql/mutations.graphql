@@ -87,4 +87,9 @@ type Mutation {
     Update a student
     """
     updateStudent(data: StudentUpdateInput!, where: StudentWhereUniqueInput): StudentResponse
+
+    """
+    Add a timetable
+    """
+    addClassTimetable(input: [TimeTableCreateInput!]): TimetableResponse!
 }

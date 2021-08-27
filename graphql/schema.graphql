@@ -208,6 +208,37 @@ type AuthResponse {
     error: Error
 }
 
+type TimeTable {
+    id: ID!
+    class: Classroom
+    teacher: User
+    weekday: WeekDays
+    start: String
+    end: String
+    event: String
+    type: TimetableType!
+    subject: ClassSubject
+    school: School
+}
+
+type TimetableResponse {
+    payload: [TimeTableRes]
+    error: Error
+}
+
+type TimeTableRes {
+    subject: ClassSubject
+    teacher: User
+    event: String
+    weekday: WeekDays
+    end: String
+    class: Classroom
+    type: TimetableType
+    start: String
+    title: String
+    allDay: Boolean
+    resourceId: String
+}
 input SignUpInput {
     firstName: String!
     middleName: String
@@ -501,6 +532,25 @@ input ClassSubjectUpdateInput {
     class: ClassroomUpdateOneRequiredWithoutSubjectsInput
 }
 
+input TimeTableCreateInput {
+    class: ClassroomCreateOneInput
+    teacher: UserCreateOneInput
+    weekday: WeekDays
+    start: String
+    end: String
+    event: String
+    type: TimetableType!
+    subject: ClassSubjectCreateOneInput
+}
+
+input ClassSubjectCreateOneInput {
+    connect: ClassSubjectWhereUniqueInput
+}
+
+input ClassroomCreateOneInput {
+    connect: ClassroomWhereUniqueInput
+}
+
 enum Role {
     SUDO
     ADMIN
@@ -533,4 +583,22 @@ enum Gender {
 enum SubjectStatus {
     OPTIONAL
     COMPULSORY
+}
+
+enum WeekDays {
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    FRIDAY
+    SATURDAY
+    SUNDAY
+}
+
+enum TimetableType {
+    RECURRING
+    SINGLE
+    ALLDAY
+    MONTHLY
+    WEEKLY
 }
